@@ -1,5 +1,10 @@
-# Claude Code config (personal)
-.claude/
+# Claude Code MCP configs with API keys
+.claude/mcp/context7.json
+.claude/mcp/todoist.json
+.claude/mcp/ref.json
+.claude/mcp/exa.json
+
+# Conductor
 .conductor/
 
 # Dependencies
