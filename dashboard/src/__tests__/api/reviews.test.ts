@@ -450,7 +450,7 @@ Some notes here.
 `);
 
       const request = new NextRequest('http://localhost:3000/api/reviews/daily/2024-12-31');
-      const response = await GET(request, { params: { date: '2024-12-31' } });
+      const response = await GET(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -467,7 +467,7 @@ Some notes here.
       (fs.readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
 
       const request = new NextRequest('http://localhost:3000/api/reviews/daily/2024-12-31');
-      const response = await GET(request, { params: { date: '2024-12-31' } });
+      const response = await GET(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -478,7 +478,7 @@ Some notes here.
       const { GET } = await import('@/app/api/reviews/daily/[date]/route');
 
       const request = new NextRequest('http://localhost:3000/api/reviews/daily/invalid-date');
-      const response = await GET(request, { params: { date: 'invalid-date' } });
+      const response = await GET(request, { params: Promise.resolve({ date: 'invalid-date' }) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -508,7 +508,7 @@ Some notes here.
         body: JSON.stringify(updateData),
       });
 
-      const response = await PUT(request, { params: { date: '2024-12-31' } });
+      const response = await PUT(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -528,7 +528,7 @@ Some notes here.
         body: JSON.stringify(updateData),
       });
 
-      const response = await PUT(request, { params: { date: '2024-12-31' } });
+      const response = await PUT(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(data.success).toBe(true);
@@ -545,7 +545,7 @@ Some notes here.
         body: JSON.stringify(updateData),
       });
 
-      const response = await PUT(request, { params: { date: '2024-12-31' } });
+      const response = await PUT(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -568,7 +568,7 @@ Some notes here.
         body: JSON.stringify(invalidData),
       });
 
-      const response = await PUT(request, { params: { date: '2024-12-31' } });
+      const response = await PUT(request, { params: Promise.resolve({ date: '2024-12-31' }) });
       const data = await response.json();
 
       expect(response.status).toBe(400);

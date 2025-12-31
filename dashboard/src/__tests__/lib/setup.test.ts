@@ -39,9 +39,10 @@ describe('T1: Project Setup', () => {
   });
 
   describe('Module Aliases', () => {
-    it('should resolve @/ imports to src directory', () => {
+    it('should resolve @/ imports to src directory', async () => {
       // If this test runs, the @/ alias is working
-      expect(DailyReview).toBeDefined;
+      const types = await import('@/lib/types');
+      expect(types).toBeDefined();
     });
   });
 
