@@ -1,3 +1,7 @@
+# Claude Code config (personal)
+.claude/
+.conductor/
+
 # Dependencies
 node_modules/
 .pnpm-store/
