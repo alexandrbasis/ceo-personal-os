@@ -1,4 +1,8 @@
 /**
+ * @jest-environment node
+ */
+
+/**
  * T4: API Route Tests - Life Map
  *
  * Tests for:

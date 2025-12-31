@@ -74,10 +74,10 @@ describe('T5: ReviewsList Component', () => {
 
     render(<ReviewsList reviews={mockReviews.slice(0, 3)} />);
 
-    // Should show energy levels as badges
-    expect(screen.getByText(/8/)).toBeInTheDocument();
-    expect(screen.getByText(/6/)).toBeInTheDocument();
-    expect(screen.getByText(/9/)).toBeInTheDocument();
+    // Should show energy levels as badges (using testId to avoid date conflicts)
+    expect(screen.getByTestId('energy-badge-8')).toBeInTheDocument();
+    expect(screen.getByTestId('energy-badge-6')).toBeInTheDocument();
+    expect(screen.getByTestId('energy-badge-9')).toBeInTheDocument();
   });
 
   it('should display tomorrow\'s priority preview', async () => {
@@ -112,24 +112,20 @@ describe('T5: ReviewsList Component', () => {
   it('should color-code energy badges (green for high, yellow for medium, red for low)', async () => {
     const { ReviewsList } = await import('@/components/ReviewsList');
 
-    render(<ReviewsList reviews={mockReviews.slice(0, 5)} />);
+    // Use all 6 reviews to include energy level 4
+    render(<ReviewsList reviews={mockReviews} limit={6} />);
 
-    // Energy 9 should be green (high)
-    const highEnergyBadge = screen.getByTestId('energy-badge-9') ||
-                            screen.getByText('9').closest('[class*="green"]');
+    // Energy 9 should be green (high) - index 2
+    const highEnergyBadge = screen.getByTestId('energy-badge-9');
+    expect(highEnergyBadge).toBeInTheDocument();
 
-    // Energy 5 should be yellow (medium)
-    const mediumEnergyBadge = screen.getByTestId('energy-badge-5') ||
-                              screen.getByText('5').closest('[class*="yellow"]');
+    // Energy 5 should be yellow (medium) - index 3
+    const mediumEnergyBadge = screen.getByTestId('energy-badge-5');
+    expect(mediumEnergyBadge).toBeInTheDocument();
 
-    // Energy 4 should be red (low)
-    const lowEnergyBadge = screen.getByTestId('energy-badge-4') ||
-                           screen.getByText('4').closest('[class*="red"]');
-
-    // At minimum, expect the badges to exist
-    expect(screen.getByText('9')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
-    expect(screen.getByText('4')).toBeInTheDocument();
+    // Energy 4 should be red (low) - index 5
+    const lowEnergyBadge = screen.getByTestId('energy-badge-4');
+    expect(lowEnergyBadge).toBeInTheDocument();
   });
 
   it('should link each review to its detail page', async () => {
