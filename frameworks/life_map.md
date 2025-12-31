@@ -27,12 +27,12 @@ Each domain matters. None can fully compensate for another. A complete life requ
 
 | Domain | Score (1-10) | Brief Assessment |
 |--------|--------------|------------------|
-| Career | | |
-| Relationships | | |
-| Health | | |
-| Meaning | | |
-| Finances | | |
-| Fun | | |
+| Career | 8 | Strong momentum, good team |
+| Relationships | 6 | Needs more quality time |
+| Health | 5 | Acceptable but neglected |
+| Meaning | 7 | Growing sense of purpose |
+| Finances | 8 | Stable and secure |
+| Fun | 4 | Neglected, needs attention |
 
 **Total Score:** ___ / 60
 
