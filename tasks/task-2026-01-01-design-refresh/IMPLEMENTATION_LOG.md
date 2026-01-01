@@ -67,6 +67,40 @@
 
 ---
 
+### Criterion 3: AC3 - Visual Texture and Depth
+**Status**: Completed
+**Started**: 2026-01-01T17:53:00Z | **Completed**: 2026-01-01T17:54:00Z
+
+**Test File**: `dashboard/src/__tests__/design-refresh/visual-depth.design-refresh.test.tsx`
+**Tests**: 18 passing
+
+**Implementation**:
+- Updated `dashboard/src/app/globals.css`:
+  - Added .page-background class with subtle noise texture SVG
+  - Background uses soft-light blend mode for subtle texture effect
+  - Added shadow utility classes (.shadow-sm, .shadow-md, .shadow-lg)
+  - Each shadow level has appropriate opacity and spread values
+
+- Updated `dashboard/src/components/ui/card.tsx`:
+  - Enhanced Card component with inline styles for proper shadow and depth
+  - Added box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02)
+  - Added transition: box-shadow 0.2s ease for smooth hover effects
+  - Added border-radius: 12px for rounded corners
+  - Added border using var(--color-border)
+  - Added background using var(--color-surface)
+
+- Updated `dashboard/jest.setup.js`:
+  - Added .page-background class styles for test environment
+  - Added shadow utility class styles for test environment
+
+**Validation**:
+- Tests: Pass (18/18)
+- Lint: Pass (0 errors, 10 pre-existing warnings)
+- Types: Pass (no errors)
+- Regression: Pass (379/388 tests pass; 9 failures are for unimplemented AC4-AC6)
+
+---
+
 ## Summary
-**Completed**: 2/6 criteria
-**Current**: Criterion 2 complete, ready for Criterion 3
+**Completed**: 3/6 criteria
+**Current**: Criterion 3 complete, ready for Criterion 4

@@ -86,6 +86,27 @@ if (typeof window !== 'undefined') {
       --energy-high: #3D7A5C;
     }
 
+    /* Visual Texture and Depth - Background Texture */
+    .page-background {
+      background-color: var(--color-bg);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-blend-mode: soft-light;
+      background-size: 200px 200px;
+    }
+
+    /* Shadow Utilities for Elevation Layers */
+    .shadow-sm {
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .shadow-md {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .shadow-lg {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+    }
+
     /* Dark Mode Color Palette */
     [data-theme="dark"] {
       --color-bg: #1A1A19;
