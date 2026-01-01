@@ -90,4 +90,46 @@ export interface ReviewListItem {
   energyLevel: number;
   tomorrowPriority: string;
   filePath: string;
+  type?: 'daily';
+}
+
+/**
+ * Union type for any review list item
+ */
+export type AnyReviewListItem = (ReviewListItem & { type?: 'daily' }) | WeeklyReviewListItem;
+
+/**
+ * Weekly Review - 20 minute reflection on the week
+ */
+export interface WeeklyReview {
+  date: string;                    // Week start date "YYYY-MM-DD" (Monday)
+  weekNumber: number;              // 1-52
+  movedNeedle: string;             // What actually moved the needle this week
+  noiseDisguisedAsWork: string;    // What was noise disguised as work
+  timeLeaks: string;               // Where your time leaked
+  strategicInsight: string;        // One strategic insight
+  adjustmentForNextWeek: string;   // One adjustment for next week
+  notes?: string;
+  duration?: number;               // Minutes spent on review
+  filePath: string;
+}
+
+export interface WeeklyReviewFormData {
+  date: string;                    // Week start date
+  weekNumber: number;
+  movedNeedle: string;
+  noiseDisguisedAsWork: string;
+  timeLeaks: string;
+  strategicInsight: string;
+  adjustmentForNextWeek: string;
+  notes?: string;
+  duration?: number;
+}
+
+export interface WeeklyReviewListItem {
+  date: string;
+  weekNumber: number;
+  movedNeedle: string;
+  filePath: string;
+  type: 'weekly';
 }
