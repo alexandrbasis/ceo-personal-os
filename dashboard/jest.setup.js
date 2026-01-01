@@ -119,6 +119,52 @@ if (typeof window !== 'undefined') {
       --color-primary: #5BA3B5;
       --color-primary-hover: #7BBCCC;
     }
+
+    /* Motion and Micro-interactions (AC6) */
+    :root {
+      --animation-duration: 0.3s;
+      --animation-timing: ease-out;
+    }
+
+    /* Animation Utility Classes */
+    .animate-fadeInUp {
+      animation: fadeInUp var(--animation-duration) var(--animation-timing);
+      animation-fill-mode: both;
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn var(--animation-duration) var(--animation-timing);
+      animation-fill-mode: both;
+    }
+
+    .animate-slideIn {
+      animation: slideIn var(--animation-duration) var(--animation-timing);
+      animation-fill-mode: both;
+    }
+
+    .animate-celebrate {
+      animation: celebrate 0.3s var(--animation-timing);
+    }
+
+    .animate-shake {
+      animation: shake 0.5s var(--animation-timing);
+    }
+
+    .animate-confetti {
+      animation: confetti 0.6s var(--animation-timing);
+    }
+
+    .review-saved {
+      animation: celebrate 0.3s var(--animation-timing);
+    }
+
+    .duration-200 {
+      transition-duration: 200ms;
+    }
+
+    .duration-300 {
+      transition-duration: 300ms;
+    }
   `;
   document.head.appendChild(style);
 }
