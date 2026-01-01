@@ -30,6 +30,35 @@
 
 ---
 
+### Criterion 2: Date Formatting Utilities (AC2)
+**Status**: Complete
+**Started**: 2026-01-01 | **Completed**: 2026-01-01
+
+**Test File**: `src/__tests__/lib/date-formatting.test.ts`
+**Tests**: 24 passing
+
+**Implementation**:
+- Updated `src/lib/utils/date-formatting.ts`: Implemented all 6 functions
+  - `formatDateForForm`: Formats Date as YYYY-MM-DD using UTC (locale-independent)
+  - `formatDisplayDate`: Human-readable format "Jan 15, 2026" using UTC (consistent SSR/client)
+  - `formatDateForDisplay`: Alias for formatDisplayDate (backward compatibility)
+  - `getTodayISOString`: Returns today as YYYY-MM-DD string using UTC
+  - `compareDates`: Compares two ISO date strings lexicographically
+  - `isToday`: Checks if date string equals today's ISO string
+  - `parseISODate`: Parses YYYY-MM-DD to Date object with strict validation
+
+**Key Design Decisions**:
+- All functions use UTC-based methods (getUTCFullYear, getUTCMonth, getUTCDate) to ensure identical output regardless of runtime timezone
+- No use of toLocaleDateString() to avoid locale-dependent formatting
+- parseISODate creates Date at noon UTC (12:00) to avoid edge cases around midnight
+
+**Validation**:
+- Tests: Pass (24/24)
+- Lint: Clean (0 errors, pre-existing warnings unrelated to this criterion)
+- Types: No errors
+
+---
+
 ## Summary
-**Completed**: 1/5 criteria
-**Current**: Criterion 1 (AC1) - Complete
+**Completed**: 2/5 criteria
+**Current**: Criterion 2 (AC2) - Complete
