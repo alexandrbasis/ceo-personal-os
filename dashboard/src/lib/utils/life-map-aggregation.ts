@@ -43,61 +43,159 @@ export interface EnergyTrendItem {
 
 /**
  * Calculate average domain scores from multiple daily reviews
- * @throws Not implemented - stub for TDD
  */
-export function aggregateDomainScores(_reviews: ReviewWithDomains[]): DomainScores {
-  throw new Error('Not implemented: aggregateDomainScores');
+export function aggregateDomainScores(reviews: ReviewWithDomains[]): DomainScores {
+  const domains: (keyof DomainRatings)[] = [
+    'career',
+    'relationships',
+    'health',
+    'meaning',
+    'finances',
+    'fun',
+  ];
+
+  const result: DomainScores = {
+    career: 0,
+    relationships: 0,
+    health: 0,
+    meaning: 0,
+    finances: 0,
+    fun: 0,
+  };
+
+  for (const domain of domains) {
+    const values: number[] = [];
+
+    for (const review of reviews) {
+      const rating = review.domainRatings?.[domain];
+      if (rating != null) {
+        values.push(rating);
+      }
+    }
+
+    if (values.length > 0) {
+      const sum = values.reduce((acc, val) => acc + val, 0);
+      result[domain] = Math.round(sum / values.length);
+    }
+  }
+
+  return result;
 }
 
 /**
  * Derive domain scores from energy level (health domain primarily)
- * @throws Not implemented - stub for TDD
  */
-export function deriveDomainsFromEnergy(_reviews: ReviewWithDomains[]): DomainScores {
-  throw new Error('Not implemented: deriveDomainsFromEnergy');
+export function deriveDomainsFromEnergy(reviews: ReviewWithDomains[]): DomainScores {
+  const result: DomainScores = {
+    career: 0,
+    relationships: 0,
+    health: 0,
+    meaning: 0,
+    finances: 0,
+    fun: 0,
+  };
+
+  const energyValues: number[] = [];
+
+  for (const review of reviews) {
+    if (review.energyLevel != null) {
+      energyValues.push(review.energyLevel);
+    }
+  }
+
+  if (energyValues.length > 0) {
+    const sum = energyValues.reduce((acc, val) => acc + val, 0);
+    result.health = Math.round(sum / energyValues.length);
+  }
+
+  return result;
 }
 
 /**
  * Combine aggregated domain scores with energy-derived values
  * Aggregated values take priority, derived values fill gaps
- * @throws Not implemented - stub for TDD
  */
 export function combineAggregatedWithDerived(
-  _aggregated: DomainScores,
-  _derived: DomainScores
+  aggregated: DomainScores,
+  derived: DomainScores
 ): DomainScores {
-  throw new Error('Not implemented: combineAggregatedWithDerived');
+  const domains: (keyof DomainScores)[] = [
+    'career',
+    'relationships',
+    'health',
+    'meaning',
+    'finances',
+    'fun',
+  ];
+
+  const result: DomainScores = {
+    career: 0,
+    relationships: 0,
+    health: 0,
+    meaning: 0,
+    finances: 0,
+    fun: 0,
+  };
+
+  for (const domain of domains) {
+    result[domain] = aggregated[domain] !== 0 ? aggregated[domain] : derived[domain];
+  }
+
+  return result;
 }
 
 /**
  * Check if chart data is empty (all scores are 0 or null/undefined)
- * @throws Not implemented - stub for TDD
  */
-export function isDataEmpty(_data: ChartDataItem[]): boolean {
-  throw new Error('Not implemented: isDataEmpty');
+export function isDataEmpty(data: ChartDataItem[]): boolean {
+  if (data.length === 0) {
+    return true;
+  }
+
+  return data.every((item) => item.score == null || item.score === 0);
 }
 
 /**
  * Determine if empty state should be shown
  * Returns true only when no reviews exist at all
- * @throws Not implemented - stub for TDD
  */
-export function shouldShowEmptyState(_data: ChartDataItem[], _hasReviews: boolean): boolean {
-  throw new Error('Not implemented: shouldShowEmptyState');
+export function shouldShowEmptyState(data: ChartDataItem[], hasReviews: boolean): boolean {
+  // If data has non-zero values, never show empty state
+  if (!isDataEmpty(data)) {
+    return false;
+  }
+
+  // Show empty state only when no reviews exist
+  return !hasReviews;
 }
 
 /**
  * Extract energy level data for trend chart
- * @throws Not implemented - stub for TDD
  */
-export function getEnergyTrendData(_reviews: ReviewWithDomains[]): EnergyTrendItem[] {
-  throw new Error('Not implemented: getEnergyTrendData');
+export function getEnergyTrendData(reviews: ReviewWithDomains[]): EnergyTrendItem[] {
+  return reviews
+    .filter((review) => review.energyLevel != null)
+    .map((review) => ({
+      date: review.date,
+      energy: review.energyLevel as number,
+    }));
 }
 
 /**
  * Convert domain scores object to chart-compatible array format
- * @throws Not implemented - stub for TDD
  */
-export function convertToChartData(_scores: DomainScores): ChartDataItem[] {
-  throw new Error('Not implemented: convertToChartData');
+export function convertToChartData(scores: DomainScores): ChartDataItem[] {
+  const domainNames: { key: keyof DomainScores; label: string }[] = [
+    { key: 'career', label: 'Career' },
+    { key: 'relationships', label: 'Relationships' },
+    { key: 'health', label: 'Health' },
+    { key: 'meaning', label: 'Meaning' },
+    { key: 'finances', label: 'Finances' },
+    { key: 'fun', label: 'Fun' },
+  ];
+
+  return domainNames.map(({ key, label }) => ({
+    domain: label,
+    score: scores[key],
+  }));
 }
