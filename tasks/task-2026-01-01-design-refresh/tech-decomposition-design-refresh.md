@@ -1,5 +1,15 @@
 # Technical Task: Design Refresh - Distinctive UI/UX
 
+## Confirmed Decisions (2026-01-01)
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Display Font | **Fraunces** | Editorial, distinctive serifs - matches "thinking system" philosophy |
+| Body Font | **Source Sans Pro** | Clean, functional, pairs well with Fraunces |
+| Testing Scope | Basic component rendering tests | Focus on design, exclude visual regression |
+| EmptyState | Create new component | Add personality to empty states |
+| Tailwind Config | Use `@theme` in globals.css | Project uses Tailwind v4 (CSS-based config) |
+
 ## Overview
 Transform the CEO Personal OS dashboard from a generic-looking application to a distinctive, memorable interface that reflects the thoughtful, intentional nature of the system.
 
