@@ -59,6 +59,65 @@
 
 ---
 
+### Criterion 3: ClientDate Component (AC2)
+**Status**: Complete
+**Started**: 2026-01-01 | **Completed**: 2026-01-01
+
+**Test File**: `src/__tests__/components/hydration.test.tsx`
+**Tests**: 17 passing (all AC2 hydration tests)
+
+**Implementation**:
+- Updated `src/components/ui/client-date.tsx`: Implemented ClientDate component
+  - Uses useState + useEffect pattern to detect client-side mounting
+  - Shows placeholder during SSR, real formatted date on client
+  - Supports 'short', 'long', and 'iso' format options
+  - Integrates with date-formatting utilities
+  - Uses suppressHydrationWarning for safety
+
+**Key Design Decisions**:
+- Standard React pattern for client-only rendering (useState + useEffect)
+- Added eslint-disable comment with detailed explanation for React Compiler lint rule
+- Placeholder prop allows customizable SSR content (defaults to empty for minimal layout shift)
+- parseDate helper handles Date objects, strings, and undefined (defaults to current date)
+
+**Validation**:
+- Tests: Pass (17/17)
+- Lint: Clean (0 errors, 10 pre-existing warnings in other files)
+- Types: No errors
+
+**Commit**: 9d7fa41 - "feat: implement ClientDate component (AC2)"
+
+---
+
+### Criterion 4: LifeMapChart Component Enhancements (AC1)
+**Status**: Complete
+**Started**: 2026-01-01 | **Completed**: 2026-01-01
+
+**Test File**: `src/__tests__/components/LifeMapChart.critical-bugs.test.tsx`
+**Tests**: 13 passing
+
+**Implementation**:
+- Updated `src/components/LifeMapChart.tsx`: Enhanced with fallback visualizations
+  - Added imports for LineChart, Line, XAxis, YAxis, CartesianGrid from recharts
+  - Imported isDataEmpty from life-map-aggregation utility
+  - Case 1: Empty state - shows "Complete your first review" when hasReviews=false and data is empty
+  - Case 2: Energy trend fallback - shows LineChart when domain data is empty but energyTrendData exists
+  - Case 3: Regular radar chart - displays when domain data has non-zero values
+  - Added message "Add domain ratings in daily reviews to unlock full Life Map" for energy fallback
+
+**Key Design Decisions**:
+- Three-tier conditional rendering: empty state -> energy fallback -> radar chart
+- Empty state has data-testid="empty-state" for test targeting
+- Energy trend fallback includes instructional text above the chart
+- Radar chart remains the primary visualization when domain data is available
+
+**Validation**:
+- Tests: Pass (13/13 in critical-bugs, 24/24 total LifeMapChart tests)
+- Lint: Clean (0 errors, 10 pre-existing warnings in other files)
+- Types: No errors
+
+---
+
 ## Summary
-**Completed**: 2/5 criteria
-**Current**: Criterion 2 (AC2) - Complete
+**Completed**: 4/5 criteria
+**Current**: Criterion 4 (AC1) - Complete
