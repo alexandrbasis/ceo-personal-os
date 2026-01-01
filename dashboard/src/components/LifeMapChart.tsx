@@ -14,9 +14,20 @@ export interface LifeMapChartData {
   score: number | null | undefined;
 }
 
+export interface EnergyTrendDataItem {
+  date: string;
+  energy: number;
+}
+
 export interface LifeMapChartProps {
   data: LifeMapChartData[];
   height?: number;
+  /** Whether the user has any daily reviews (used to determine empty state) */
+  hasReviews?: boolean;
+  /** Energy trend data for fallback visualization */
+  energyTrendData?: EnergyTrendDataItem[];
+  /** Whether to show energy trend chart as fallback when domain data is empty */
+  showEnergyTrendFallback?: boolean;
 }
 
 /**
