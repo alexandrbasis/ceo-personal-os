@@ -68,7 +68,8 @@ export function aggregateDomainScores(reviews: ReviewWithDomains[]): DomainScore
 
     for (const review of reviews) {
       const rating = review.domainRatings?.[domain];
-      if (rating != null) {
+      // Skip null, undefined, and 0 (0 means "not rated" in the UI)
+      if (rating != null && rating > 0) {
         values.push(rating);
       }
     }

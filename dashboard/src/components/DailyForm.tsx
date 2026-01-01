@@ -14,13 +14,14 @@ import { Label } from '@/components/ui/label';
 const DRAFT_KEY = 'dailyReviewDraft';
 
 // Domain ratings schema - each domain is 0-10 scale (0 = not rated)
+// All keys are optional to support partial data from drafts or legacy reviews
 const domainRatingsSchema = z.object({
-  career: z.number().min(0).max(10),
-  relationships: z.number().min(0).max(10),
-  health: z.number().min(0).max(10),
-  meaning: z.number().min(0).max(10),
-  finances: z.number().min(0).max(10),
-  fun: z.number().min(0).max(10),
+  career: z.number().min(0).max(10).optional(),
+  relationships: z.number().min(0).max(10).optional(),
+  health: z.number().min(0).max(10).optional(),
+  meaning: z.number().min(0).max(10).optional(),
+  finances: z.number().min(0).max(10).optional(),
+  fun: z.number().min(0).max(10).optional(),
 });
 
 // Form validation schema

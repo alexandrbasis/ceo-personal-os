@@ -549,5 +549,44 @@ describe('Option B: Domain Ratings in Daily Review Form', () => {
       const healthInput = screen.getByLabelText(/health/i);
       expect(healthInput).toHaveValue(7);
     });
+
+    it('should accept partial domainRatings from drafts or legacy data', async () => {
+      // This tests that the schema accepts partial domainRatings objects
+      // (e.g., from drafts or legacy data where not all domains were rated)
+      const user = userEvent.setup();
+      const { DailyForm } = await import('@/components/DailyForm');
+
+      const initialData = {
+        date: '2026-01-01',
+        energyLevel: 7,
+        meaningfulWin: 'Initial win',
+        tomorrowPriority: 'Initial priority',
+        domainRatings: {
+          career: 8,
+          // Other domains not present - simulating partial/legacy data
+        },
+      };
+
+      render(<DailyForm onSubmit={mockOnSubmit} initialData={initialData} />);
+
+      // Form should render without validation errors
+      // Expand domain ratings
+      const expandButton = screen.queryByRole('button', { name: /expand|show|domain|life map/i });
+      if (expandButton) {
+        await user.click(expandButton);
+      }
+
+      // Career should have the value from initialData
+      const careerInput = screen.getByLabelText(/career/i);
+      expect(careerInput).toHaveValue(8);
+
+      // Submit should work with partial domainRatings
+      const submitButton = screen.getByRole('button', { name: /save/i });
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockOnSubmit).toHaveBeenCalled();
+      });
+    });
   });
 });

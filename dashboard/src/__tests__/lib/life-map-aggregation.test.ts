@@ -151,6 +151,37 @@ describe('AC1: Life Map Domain Aggregation', () => {
       expect(result.health).toBe(0);
       expect(result.relationships).toBe(0);
     });
+
+    it('should treat 0 as "not rated" and skip zeros in aggregation', async () => {
+      // This is critical: 0 means "not rated" in the UI, so zeros should NOT
+      // drag down averages. If user rates career=8 on day 1 and doesn't rate
+      // it (0) on day 2, the average should be 8, not 4.
+      const { aggregateDomainScores } = await import('@/lib/utils/life-map-aggregation');
+
+      const reviews = [
+        {
+          date: '2026-01-01',
+          domainRatings: {
+            career: 8,
+            health: 6,
+          },
+        },
+        {
+          date: '2025-12-31',
+          domainRatings: {
+            career: 0, // User didn't rate career this day (0 = not rated)
+            health: 8,
+          },
+        },
+      ];
+
+      const result = aggregateDomainScores(reviews);
+
+      // Career should be 8 (only one real rating), not 4 (8+0)/2
+      expect(result.career).toBe(8);
+      // Health should be 7 (6+8)/2 - both are real ratings
+      expect(result.health).toBe(7);
+    });
   });
 
   describe('deriveDomainsFromEnergy', () => {
