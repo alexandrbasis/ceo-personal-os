@@ -3,6 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Typography - Font Families */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Source Sans Pro', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Typography - Line Heights */
+  --line-height-heading: 1.2;
+  --line-height-body: 1.6;
+
+  /* Typography - Letter Spacing */
+  --letter-spacing-heading: -0.02em;
+  --letter-spacing-body: 0;
 }
 
 @theme inline {
@@ -10,6 +23,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Tailwind font utilities */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Source Sans Pro', sans-serif;
+
+  /* Custom text sizes */
+  --text-caption: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +42,19 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+/* Tailwind utility class definitions */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: 1.4;
 }
