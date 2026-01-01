@@ -10,11 +10,17 @@ import path from 'path';
 // Base path is the project root (parent of dashboard/)
 export const MARKDOWN_BASE_PATH = path.resolve(process.cwd(), '..');
 
-// Reviews directory
+// Reviews directories
 export const REVIEWS_DAILY_PATH = path.join(
   MARKDOWN_BASE_PATH,
   'reviews',
   'daily'
+);
+
+export const REVIEWS_WEEKLY_PATH = path.join(
+  MARKDOWN_BASE_PATH,
+  'reviews',
+  'weekly'
 );
 
 // Life map file
