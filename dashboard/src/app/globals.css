@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FAFAF8;
+  --foreground: #2C2C2B;
 
   /* Typography - Font Families */
   --font-display: 'Fraunces', serif;
@@ -43,11 +43,52 @@
   --energy-low: #9B3D3D;
   --energy-mid: #C4883D;
   --energy-high: #3D7A5C;
+
+  /* Shadcn-compatible variables (mapped to design refresh palette) */
+  --primary: #1E4D5C;
+  --primary-foreground: #f8fafc;
+  --secondary: #F5F5F0;
+  --secondary-foreground: #2C2C2B;
+  --muted: #F5F5F0;
+  --muted-foreground: #6B6B67;
+  --accent: #C4A35A;
+  --accent-foreground: #2C2C2B;
+  --destructive: #9B3D3D;
+  --destructive-foreground: #FAFAF8;
+  --card: #FFFFFF;
+  --card-foreground: #2C2C2B;
+  --popover: #FFFFFF;
+  --popover-foreground: #2C2C2B;
+  --ring: #1E4D5C;
+  --border: #E8E6E1;
+  --input: #E8E6E1;
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-ring: var(--ring);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -61,8 +102,43 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1A1A19;
+    --foreground: #F5F5F0;
+
+    /* Primary - Lighter teal for dark mode */
+    --primary: #5BA3B5;
+    --primary-foreground: #0f172a;
+
+    /* Secondary */
+    --secondary: #2E2E2C;
+    --secondary-foreground: #F5F5F0;
+
+    /* Muted */
+    --muted: #2E2E2C;
+    --muted-foreground: #A3A39E;
+
+    /* Accent */
+    --accent: #C4A35A;
+    --accent-foreground: #F5F5F0;
+
+    /* Destructive */
+    --destructive: #9B3D3D;
+    --destructive-foreground: #F5F5F0;
+
+    /* Card */
+    --card: #242423;
+    --card-foreground: #F5F5F0;
+
+    /* Popover */
+    --popover: #242423;
+    --popover-foreground: #F5F5F0;
+
+    /* Ring color for focus states */
+    --ring: #5BA3B5;
+
+    /* Border and Input */
+    --border: #3D3D3A;
+    --input: #3D3D3A;
   }
 }
 

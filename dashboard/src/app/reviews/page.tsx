@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { FolderArchive } from 'lucide-react';
 import { ReviewsList } from '@/components/ReviewsList';
+import { EmptyState } from '@/components/EmptyState';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { ReviewListItem } from '@/lib/types';
@@ -88,17 +90,31 @@ export default function AllReviewsPage() {
           </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Daily Reviews ({reviews.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div data-testid="reviews-list">
-              {/* Show all reviews without limit */}
-              <ReviewsList reviews={reviews} limit={999} />
-            </div>
-          </CardContent>
-        </Card>
+        {reviews.length === 0 ? (
+          <Card>
+            <CardContent className="pt-6">
+              <EmptyState
+                icon={FolderArchive}
+                title="Your Review Archive"
+                message="This is where all your daily reflections will be stored. Start your first review to begin building your personal insight library."
+                ctaText="Start First Review"
+                ctaHref="/daily"
+              />
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Daily Reviews ({reviews.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div data-testid="reviews-list">
+                {/* Show all reviews without limit */}
+                <ReviewsList reviews={reviews} limit={999} />
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </main>
     </div>
   );

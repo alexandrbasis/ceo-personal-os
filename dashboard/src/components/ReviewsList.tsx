@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
+import { CalendarDays } from 'lucide-react';
 import type { ReviewListItem } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { EmptyState } from '@/components/EmptyState';
 
 export interface ReviewsListProps {
   reviews: ReviewListItem[];
@@ -55,13 +57,18 @@ function formatDisplayDate(dateStr: string): string {
  * - Truncated priority preview
  * - Links to detail pages
  * - Configurable limit (default: 5)
+ * - Encouraging empty state when no reviews exist
  */
 export function ReviewsList({ reviews, limit = 5 }: ReviewsListProps) {
   if (reviews.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
-        No reviews yet. Start your first daily review!
-      </div>
+      <EmptyState
+        icon={CalendarDays}
+        title="Begin Your Journey"
+        message="Daily reviews take just 2-3 minutes and help you reflect on what matters. Start building your self-awareness practice today."
+        ctaText="Create First Review"
+        ctaHref="/daily"
+      />
     );
   }
 
