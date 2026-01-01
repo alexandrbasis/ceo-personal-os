@@ -54,6 +54,12 @@ function Button({
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
+      style={{
+        transition: 'all 0.2s ease',
+        transitionDuration: '0.2s',
+        transitionTimingFunction: 'ease',
+        ...props.style
+      }}
       {...props}
     />
   )
