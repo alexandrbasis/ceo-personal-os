@@ -2,6 +2,18 @@
  * TypeScript interfaces for CEO Personal OS Dashboard
  */
 
+/**
+ * Domain ratings for Life Map - each domain is 0-10 (0 = not rated)
+ */
+export interface DomainRatings {
+  career?: number;
+  relationships?: number;
+  health?: number;
+  meaning?: number;
+  finances?: number;
+  fun?: number;
+}
+
 export interface DailyReview {
   date: string;                    // "2024-12-31"
   energyLevel: number;             // 1-10
@@ -13,6 +25,7 @@ export interface DailyReview {
   tomorrowPriority: string;
   notes?: string;
   completionTimeMinutes?: number;
+  domainRatings?: DomainRatings;   // Optional Life Map domain ratings
   filePath: string;
 }
 
@@ -27,6 +40,7 @@ export interface DailyReviewFormData {
   tomorrowPriority: string;
   notes?: string;
   completionTimeMinutes?: number;
+  domainRatings?: DomainRatings;   // Optional Life Map domain ratings
 }
 
 export interface LifeMapDomain {

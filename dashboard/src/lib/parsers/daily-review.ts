@@ -5,7 +5,7 @@
  * Serializes DailyReviewFormData back to TEMPLATE.md markdown format.
  */
 
-import type { DailyReview, DailyReviewFormData } from '@/lib/types';
+import type { DailyReview, DailyReviewFormData, DomainRatings } from '@/lib/types';
 
 /**
  * Check if a value is a placeholder (e.g., [Your win], [YYYY-MM-DD])
@@ -160,6 +160,35 @@ export function parseDailyReview(
     result.completionTimeMinutes = parseInt(timeMatch[1], 10);
   }
 
+  // Extract domain ratings from Life Map Ratings section
+  const lifeMapSection = extractSection(content, 'Life Map Ratings');
+  if (lifeMapSection) {
+    const domainRatings: DomainRatings = {};
+    const domainPatterns: [keyof DomainRatings, RegExp][] = [
+      ['career', /Career:\s*(\d+)/i],
+      ['relationships', /Relationships:\s*(\d+)/i],
+      ['health', /Health:\s*(\d+)/i],
+      ['meaning', /Meaning:\s*(\d+)/i],
+      ['finances', /Finances:\s*(\d+)/i],
+      ['fun', /Fun:\s*(\d+)/i],
+    ];
+
+    for (const [domain, pattern] of domainPatterns) {
+      const match = lifeMapSection.match(pattern);
+      if (match) {
+        const value = parseInt(match[1], 10);
+        if (!isNaN(value) && value >= 0 && value <= 10) {
+          domainRatings[domain] = value;
+        }
+      }
+    }
+
+    // Only add domainRatings if at least one domain has a non-zero value
+    if (Object.values(domainRatings).some(v => v !== undefined && v > 0)) {
+      result.domainRatings = domainRatings;
+    }
+  }
+
   return result;
 }
 
@@ -247,6 +276,26 @@ export function serializeDailyReview(data: DailyReviewFormData): string {
   lines.push('');
   lines.push('---');
   lines.push('');
+
+  // Life Map Ratings section (optional - only if any domain is rated)
+  if (data.domainRatings) {
+    const hasAnyRating = Object.values(data.domainRatings).some(v => v !== undefined && v > 0);
+    if (hasAnyRating) {
+      lines.push('## Life Map Ratings');
+      lines.push('');
+      lines.push('*Rate your satisfaction today (0 = not rated, 1-10)*');
+      lines.push('');
+      lines.push(`- Career: ${data.domainRatings.career ?? 0}`);
+      lines.push(`- Relationships: ${data.domainRatings.relationships ?? 0}`);
+      lines.push(`- Health: ${data.domainRatings.health ?? 0}`);
+      lines.push(`- Meaning: ${data.domainRatings.meaning ?? 0}`);
+      lines.push(`- Finances: ${data.domainRatings.finances ?? 0}`);
+      lines.push(`- Fun: ${data.domainRatings.fun ?? 0}`);
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
+  }
 
   // Time to complete footer
   const timeValue =

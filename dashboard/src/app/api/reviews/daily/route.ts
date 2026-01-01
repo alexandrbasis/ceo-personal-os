@@ -56,6 +56,22 @@ function validateFormData(
     return { valid: false, error: 'Missing or invalid tomorrowPriority field' };
   }
 
+  // Validate domainRatings if provided
+  let domainRatings: DailyReviewFormData['domainRatings'] | undefined;
+  if (formData.domainRatings && typeof formData.domainRatings === 'object') {
+    const dr = formData.domainRatings as Record<string, unknown>;
+    domainRatings = {};
+    const domains = ['career', 'relationships', 'health', 'meaning', 'finances', 'fun'] as const;
+    for (const domain of domains) {
+      if (dr[domain] !== undefined) {
+        const value = Number(dr[domain]);
+        if (!isNaN(value) && value >= 0 && value <= 10) {
+          domainRatings[domain] = value;
+        }
+      }
+    }
+  }
+
   return {
     valid: true,
     data: {
@@ -69,6 +85,7 @@ function validateFormData(
       tomorrowPriority: formData.tomorrowPriority as string,
       notes: formData.notes as string | undefined,
       completionTimeMinutes: formData.completionTimeMinutes as number | undefined,
+      domainRatings,
     },
   };
 }

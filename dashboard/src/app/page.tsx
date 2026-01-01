@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { LifeMapChart, type LifeMapChartData } from '@/components/LifeMapChart';
+import { LifeMapChart, type LifeMapChartData, type EnergyTrendDataItem } from '@/components/LifeMapChart';
 import { QuickActions } from '@/components/QuickActions';
 import { ReviewsList } from '@/components/ReviewsList';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { isDataEmpty } from '@/lib/utils/life-map-aggregation';
 import type { ReviewListItem } from '@/lib/types';
 
 interface LifeMapResponse {
@@ -79,6 +80,18 @@ export default function DashboardPage() {
   // Get the last review date for status indicator
   const lastReviewDate = reviews.length > 0 ? reviews[0].date : null;
 
+  // Compute energy trend data from reviews for fallback visualization
+  const energyTrendData: EnergyTrendDataItem[] = useMemo(() => {
+    return reviews
+      .filter(r => r.energyLevel > 0)
+      .map(r => ({ date: r.date, energy: r.energyLevel }))
+      .reverse(); // Oldest first for trend line
+  }, [reviews]);
+
+  // Determine if we should show fallback visualization
+  const hasReviews = reviews.length > 0;
+  const showEnergyTrendFallback = hasReviews && isDataEmpty(chartData) && energyTrendData.length > 0;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
@@ -116,7 +129,13 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div data-testid="life-map-chart">
-                <LifeMapChart data={chartData} height={350} />
+                <LifeMapChart
+                  data={chartData}
+                  height={350}
+                  hasReviews={hasReviews}
+                  showEnergyTrendFallback={showEnergyTrendFallback}
+                  energyTrendData={energyTrendData}
+                />
               </div>
             </CardContent>
           </Card>
