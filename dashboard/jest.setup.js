@@ -57,6 +57,46 @@ if (typeof window !== 'undefined') {
       /* Typography - Letter Spacing */
       --letter-spacing-heading: -0.02em;
       --letter-spacing-body: 0;
+
+      /* Color Palette - Warm Neutrals */
+      --color-bg: #FAFAF8;
+      --color-surface: #FFFFFF;
+      --color-muted: #F5F5F0;
+      --color-border: #E8E6E1;
+      --color-text: #2C2C2B;
+      --color-text-muted: #6B6B67;
+
+      /* Color Palette - Primary (Deep Teal) */
+      --color-primary: #1E4D5C;
+      --color-primary-hover: #2A6478;
+      --color-primary-light: #E8F4F7;
+
+      /* Color Palette - Accent (Muted Gold) */
+      --color-accent: #C4A35A;
+      --color-accent-light: #F7F3E8;
+
+      /* Color Palette - Status Colors */
+      --color-success: #3D7A5C;
+      --color-warning: #C4883D;
+      --color-error: #9B3D3D;
+
+      /* Energy Level Gradient */
+      --energy-low: #9B3D3D;
+      --energy-mid: #C4883D;
+      --energy-high: #3D7A5C;
+    }
+
+    /* Dark Mode Color Palette */
+    [data-theme="dark"] {
+      --color-bg: #1A1A19;
+      --color-surface: #242423;
+      --color-muted: #2E2E2C;
+      --color-border: #3D3D3A;
+      --color-text: #F5F5F0;
+      --color-text-muted: #A3A39E;
+
+      --color-primary: #5BA3B5;
+      --color-primary-hover: #7BBCCC;
     }
   `;
   document.head.appendChild(style);
