@@ -126,6 +126,35 @@
 
 ---
 
+### Criterion 5: AC5 - Accessibility Improvements
+**Status**: Completed
+**Started**: 2026-01-01T18:00:00Z | **Completed**: 2026-01-01T18:02:00Z
+
+**Test File**: `dashboard/src/__tests__/design-refresh/accessibility.design-refresh.test.tsx`
+**Tests**: 33 passing
+
+**Implementation**:
+- Updated `dashboard/src/components/ui/slider.tsx`:
+  - Extracted `aria-label` and `aria-labelledby` props from Root component props
+  - Passed these aria props directly to each Thumb element
+  - This ensures screen readers receive proper labeling for the slider control
+  - The Radix Slider's Thumb is the element with role="slider", so aria props need to go there
+
+**Already Implemented (from previous criteria)**:
+- Button: Already has focus-visible:ring classes and disabled:opacity-50 from base shadcn/ui
+- Input: Already has focus-visible:border-ring class from base shadcn/ui
+- Slider: Already has focus-visible styling on thumb, data-disabled support
+- Color palette: WCAG AA compliant colors defined in AC2
+- Motion utilities: motion-reduce:animate-none and motion-safe:animate-fadeIn work via Tailwind
+
+**Validation**:
+- Tests: Pass (33/33)
+- Lint: Pass (0 errors, 10 pre-existing warnings)
+- Types: Pass (no errors)
+- Regression: Pass (383/388 tests pass; 5 failures are for unimplemented AC6)
+
+---
+
 ## Summary
-**Completed**: 4/6 criteria
-**Current**: Criterion 4 complete, ready for Criterion 5
+**Completed**: 5/6 criteria
+**Current**: Criterion 5 complete, ready for Criterion 6
