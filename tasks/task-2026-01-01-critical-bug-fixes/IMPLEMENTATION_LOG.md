@@ -118,6 +118,46 @@
 
 ---
 
+### Criterion 5: DailyForm Domain Ratings (AC1 + AC3)
+**Status**: Complete
+**Started**: 2026-01-01 | **Completed**: 2026-01-01
+
+**Test File**: `src/__tests__/components/DailyForm.critical-bugs.test.tsx`
+**Tests**: 20 passing
+
+**Implementation**:
+- Updated `src/components/DailyForm.tsx`:
+  - Added domainRatingsSchema with 6 domains (career, relationships, health, meaning, finances, fun)
+  - Added domainRatings to dailyFormSchema as optional
+  - Created DEFAULT_DOMAIN_RATINGS constant (all zeros = not rated)
+  - Added collapsible "Life Map Ratings" section with toggle button
+  - Added 6 number inputs for domain ratings (0-10 scale, clamped on change)
+  - Domain ratings included in form submission data
+  - Support for initialData.domainRatings for edit mode
+
+**AC3 Fixes (Form Validation Icons)**:
+  - Changed from multiple `role="alert"` elements to single error summary at top
+  - Show first validation error in styled alert box
+  - Individual field errors use `aria-live="polite"` instead of role="alert"
+  - Errors clear when user corrects input
+  - No confusing visual indicators on optional fields
+  - Changed "Meaningful Win" label to span text (not a label element) to avoid conflict with "Meaning" domain rating label
+
+**Key Design Decisions**:
+- Domain ratings section is collapsed by default to keep form lightweight
+- Used aria-label on "Meaningful Win" textarea to avoid label text conflict with "Meaning" domain
+- Single error alert pattern prevents testing-library multiple element errors
+- Domain rating values clamped to 0-10 on change event
+
+**Validation**:
+- Tests: Pass (20/20 critical-bugs, 244/244 total)
+- Lint: Clean (0 errors, 10 pre-existing warnings in other files)
+- Types: No errors
+
+**Commit**: 10eb22e - "feat: add optional domain ratings to DailyForm (AC1 + AC3)"
+
+---
+
 ## Summary
-**Completed**: 4/5 criteria
-**Current**: Criterion 4 (AC1) - Complete
+**Completed**: 5/5 criteria
+**Status**: All criteria complete
