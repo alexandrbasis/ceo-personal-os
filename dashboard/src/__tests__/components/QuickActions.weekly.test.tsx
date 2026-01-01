@@ -160,10 +160,12 @@ describe('QuickActions Component - Weekly Reviews', () => {
 
       render(<QuickActions lastDailyReviewDate={null} lastWeeklyReviewDate={null} />);
 
-      // Both should have separate entries
-      const dailySection = screen.getByText(/daily/i).closest('div');
-      const weeklySection = screen.getByText(/weekly/i).closest('div');
+      // Both should have separate sections with test IDs
+      const dailySection = screen.getByTestId('daily-section');
+      const weeklySection = screen.getByTestId('weekly-section');
 
+      expect(dailySection).toBeInTheDocument();
+      expect(weeklySection).toBeInTheDocument();
       expect(dailySection).not.toBe(weeklySection);
     });
   });
@@ -195,9 +197,8 @@ describe('QuickActions Component - Weekly Reviews', () => {
 
       render(<QuickActions lastDailyReviewDate={today} lastWeeklyReviewDate={twoWeeksAgo} />);
 
-      // Daily should be green (today)
-      const dailyStatus = screen.getByTestId('daily-status-indicator') ||
-                          screen.getByTestId('status-indicator');
+      // Daily should be green (today) - uses data-testid="status-indicator"
+      const dailyStatus = screen.getByTestId('status-indicator');
       expect(dailyStatus.className).toMatch(/green|success/i);
 
       // Weekly should be red (2 weeks overdue)

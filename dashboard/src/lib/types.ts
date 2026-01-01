@@ -90,7 +90,13 @@ export interface ReviewListItem {
   energyLevel: number;
   tomorrowPriority: string;
   filePath: string;
+  type?: 'daily';
 }
+
+/**
+ * Union type for any review list item
+ */
+export type AnyReviewListItem = (ReviewListItem & { type?: 'daily' }) | WeeklyReviewListItem;
 
 /**
  * Weekly Review - 20 minute reflection on the week
