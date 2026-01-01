@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { LifeMapChart, type LifeMapChartData } from '@/components/LifeMapChart';
 import { QuickActions } from '@/components/QuickActions';
 import { ReviewsList } from '@/components/ReviewsList';
+import { WelcomeTour, HelpButton } from '@/components/WelcomeTour';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { TitleWithTooltip } from '@/components/ui/info-tooltip';
 import type { ReviewListItem } from '@/lib/types';
 
 interface LifeMapResponse {
@@ -27,6 +29,17 @@ export default function DashboardPage() {
   const [reviews, setReviews] = useState<ReviewListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showTour, setShowTour] = useState(false);
+
+  // Handler to trigger tour from help button
+  const handleShowTour = useCallback(() => {
+    setShowTour(true);
+  }, []);
+
+  // Handler when tour completes
+  const handleTourComplete = useCallback(() => {
+    setShowTour(false);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -105,6 +118,12 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      {/* Welcome Tour Modal */}
+      <WelcomeTour forceShow={showTour} onComplete={handleTourComplete} />
+
+      {/* Help Button to re-trigger tour */}
+      <HelpButton onClick={handleShowTour} />
+
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
@@ -112,7 +131,11 @@ export default function DashboardPage() {
           {/* Life Map Chart */}
           <Card>
             <CardHeader>
-              <CardTitle>Life Map</CardTitle>
+              <CardTitle>
+                <TitleWithTooltip tooltip="Rate each life domain 1-10 based on your current satisfaction. This visualization helps identify areas needing attention.">
+                  Life Map
+                </TitleWithTooltip>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div data-testid="life-map-chart">
@@ -124,7 +147,11 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <Card>
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle>
+                <TitleWithTooltip tooltip="Your command center for daily reviews. Green dot = reviewed today, Red dot = no recent review.">
+                  Quick Actions
+                </TitleWithTooltip>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div data-testid="quick-actions" role="region" aria-label="Quick Actions">
@@ -138,7 +165,9 @@ export default function DashboardPage() {
         <Card className="mt-6">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Recent Reviews</span>
+              <TitleWithTooltip tooltip="Your reflection history. Regular reviews build self-awareness and track patterns over time.">
+                Recent Reviews
+              </TitleWithTooltip>
               <Link
                 href="/reviews"
                 className="text-sm font-normal text-primary hover:underline"

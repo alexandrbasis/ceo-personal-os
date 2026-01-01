@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { LabelWithTooltip } from '@/components/ui/info-tooltip';
 
 const DRAFT_KEY = 'dailyReviewDraft';
 
@@ -167,7 +168,12 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Energy Level Slider */}
       <div className="space-y-2">
-        <Label htmlFor="energyLevel">Energy Level</Label>
+        <LabelWithTooltip
+          htmlFor="energyLevel"
+          tooltip="Rate your overall energy today. Track factors that boost or drain your energy."
+        >
+          Energy Level
+        </LabelWithTooltip>
         <div className="flex items-center gap-4">
           <Slider
             id="energyLevel"
@@ -197,7 +203,12 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Meaningful Win */}
       <div className="space-y-2">
-        <Label htmlFor="meaningfulWin">Meaningful Win</Label>
+        <LabelWithTooltip
+          htmlFor="meaningfulWin"
+          tooltip="Capture at least one thing that went well, no matter how small."
+        >
+          Meaningful Win
+        </LabelWithTooltip>
         <Textarea
           id="meaningfulWin"
           placeholder="What was your most meaningful win today?"
@@ -212,7 +223,12 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Friction Point */}
       <div className="space-y-2">
-        <Label htmlFor="frictionPoint">Friction Point</Label>
+        <LabelWithTooltip
+          htmlFor="frictionPoint"
+          tooltip="Identify what caused frustration. Decide: address it or let it go."
+        >
+          Friction Point
+        </LabelWithTooltip>
         <Textarea
           id="frictionPoint"
           placeholder="What caused friction today?"
@@ -242,7 +258,12 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Thing to Let Go */}
       <div className="space-y-2">
-        <Label htmlFor="thingToLetGo">Thing to Let Go</Label>
+        <LabelWithTooltip
+          htmlFor="thingToLetGo"
+          tooltip="What's draining energy that you can't control? Practice releasing it."
+        >
+          Thing to Let Go
+        </LabelWithTooltip>
         <Textarea
           id="thingToLetGo"
           placeholder="What do you need to let go of?"
@@ -252,7 +273,12 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Tomorrow's Priority */}
       <div className="space-y-2">
-        <Label htmlFor="tomorrowPriority">Priority for Tomorrow</Label>
+        <LabelWithTooltip
+          htmlFor="tomorrowPriority"
+          tooltip="Set ONE clear priority to focus on tomorrow."
+        >
+          Priority for Tomorrow
+        </LabelWithTooltip>
         <Textarea
           id="tomorrowPriority"
           placeholder="What's your #1 priority for tomorrow?"

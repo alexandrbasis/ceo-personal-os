@@ -90,12 +90,15 @@ describe('T5: ReviewsList Component', () => {
     expect(screen.getByText(/product roadmap/i)).toBeInTheDocument();
   });
 
-  it('should show "No reviews yet" when empty', async () => {
+  it('should show encouraging empty state when empty', async () => {
     const { ReviewsList } = await import('@/components/ReviewsList');
 
     render(<ReviewsList reviews={[]} />);
 
-    expect(screen.getByText(/no reviews/i)).toBeInTheDocument();
+    // Should show the empty state with title and CTA
+    expect(screen.getByText(/Begin Your Journey/i)).toBeInTheDocument();
+    expect(screen.getByText(/Daily reviews take just 2-3 minutes/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Create First Review/i })).toHaveAttribute('href', '/daily');
   });
 
   it('should limit to 5 most recent reviews', async () => {

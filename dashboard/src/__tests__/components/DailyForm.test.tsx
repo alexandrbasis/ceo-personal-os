@@ -48,8 +48,8 @@ describe('T5: DailyForm Component', () => {
       expect(screen.getByText(/energy level/i)).toBeInTheDocument();
       expect(screen.getByText(/meaningful win/i)).toBeInTheDocument();
       expect(screen.getByText(/friction point/i)).toBeInTheDocument();
-      expect(screen.getByText(/let go/i)).toBeInTheDocument();
-      expect(screen.getByText(/tomorrow/i)).toBeInTheDocument();
+      expect(screen.getByText(/thing to let go/i)).toBeInTheDocument();
+      expect(screen.getByText(/priority for tomorrow/i)).toBeInTheDocument();
     });
 
     it('should render date picker defaulting to today', async () => {

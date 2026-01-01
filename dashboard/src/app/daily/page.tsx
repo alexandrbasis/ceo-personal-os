@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { DailyForm } from '@/components/DailyForm';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 /**
  * New Daily Review Page
@@ -55,7 +57,12 @@ export default function NewDailyReviewPage() {
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader>
-            <CardTitle>New Daily Review</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>New Daily Review</CardTitle>
+              <Button asChild variant="outline">
+                <Link href="/">Cancel</Link>
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <DailyForm onSubmit={handleSubmit} />

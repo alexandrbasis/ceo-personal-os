@@ -107,12 +107,34 @@ describe('T5: LifeMapChart Component', () => {
     }).not.toThrow();
   });
 
-  it('should handle empty data array', async () => {
+  it('should handle empty data array and show empty state', async () => {
     const { LifeMapChart } = await import('@/components/LifeMapChart');
 
-    expect(() => {
-      render(<LifeMapChart data={[]} />);
-    }).not.toThrow();
+    render(<LifeMapChart data={[]} />);
+
+    // Should show the empty state with title and CTA
+    expect(screen.getByText(/Your Life Map Awaits/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Start Your First Review/i })).toHaveAttribute('href', '/daily');
+  });
+
+  it('should show empty state when all scores are zero', async () => {
+    const { LifeMapChart } = await import('@/components/LifeMapChart');
+
+    const allZeroData = [
+      { domain: 'Career', score: 0 },
+      { domain: 'Relationships', score: 0 },
+      { domain: 'Health', score: 0 },
+      { domain: 'Meaning', score: 0 },
+      { domain: 'Finances', score: 0 },
+      { domain: 'Fun', score: 0 },
+    ];
+
+    render(<LifeMapChart data={allZeroData} />);
+
+    // Should show the empty state with encouraging message
+    expect(screen.getByText(/Your Life Map Awaits/i)).toBeInTheDocument();
+    expect(screen.getByText(/Complete your first daily review/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Start Your First Review/i })).toHaveAttribute('href', '/daily');
   });
 
   it('should have accessible name for screen readers', async () => {
