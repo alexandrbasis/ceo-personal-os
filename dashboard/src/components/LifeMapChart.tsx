@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   ResponsiveContainer,
   RadarChart,
@@ -8,126 +7,115 @@ import {
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
 } from 'recharts';
-import { Compass } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+
+import { isDataEmpty } from '@/lib/utils/life-map-aggregation';
 
 export interface LifeMapChartData {
   domain: string;
   score: number | null | undefined;
 }
 
+export interface EnergyTrendDataItem {
+  date: string;
+  energy: number;
+}
+
 export interface LifeMapChartProps {
   data: LifeMapChartData[];
   height?: number;
-}
-
-// Mobile-friendly label abbreviations for long domain names
-const MOBILE_LABELS: Record<string, string> = {
-  Relationships: 'Relations',
-  Finances: 'Finance',
-};
-
-// Breakpoint for mobile view (in pixels)
-const MOBILE_BREAKPOINT = 480;
-
-/**
- * Custom hook to detect if viewport is mobile-sized
- */
-function useIsMobile(breakpoint: number = MOBILE_BREAKPOINT): boolean {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Check initial width
-    const checkWidth = () => {
-      setIsMobile(window.innerWidth < breakpoint);
-    };
-
-    checkWidth();
-
-    // Listen for resize events
-    window.addEventListener('resize', checkWidth);
-    return () => window.removeEventListener('resize', checkWidth);
-  }, [breakpoint]);
-
-  return isMobile;
-}
-
-/**
- * Custom tick component for PolarAngleAxis
- * Renders responsive labels that abbreviate on mobile viewports
- */
-interface CustomTickProps {
-  x?: number | string;
-  y?: number | string;
-  payload?: { value: string };
-  isMobile: boolean;
-}
-
-function CustomTick({ x, y, payload, isMobile }: CustomTickProps) {
-  if (!payload) return null;
-
-  const label = isMobile
-    ? MOBILE_LABELS[payload.value] || payload.value
-    : payload.value;
-
-  return (
-    <text
-      x={x}
-      y={y}
-      textAnchor="middle"
-      dominantBaseline="central"
-      className="fill-current text-xs sm:text-sm"
-      style={{ fontSize: isMobile ? '11px' : '12px' }}
-    >
-      {label}
-    </text>
-  );
-}
-
-/**
- * Check if all scores in the data are zero or empty
- */
-function isDataEmpty(data: LifeMapChartData[]): boolean {
-  return data.every((item) => !item.score || item.score === 0);
+  /** Whether the user has any daily reviews (used to determine empty state) */
+  hasReviews?: boolean;
+  /** Energy trend data for fallback visualization */
+  energyTrendData?: EnergyTrendDataItem[];
+  /** Whether to show energy trend chart as fallback when domain data is empty */
+  showEnergyTrendFallback?: boolean;
 }
 
 /**
  * LifeMapChart - Radar chart displaying 6 life domains
  * Uses Recharts RadarChart with responsive container
- * Labels automatically abbreviate on mobile to prevent truncation
- * Shows encouraging empty state when no data exists
+ * Falls back to energy trend line chart when domain data is unavailable
  */
-export function LifeMapChart({ data, height = 400 }: LifeMapChartProps) {
-  const isMobile = useIsMobile();
-
+export function LifeMapChart({
+  data,
+  height = 400,
+  hasReviews = true,
+  energyTrendData = [],
+  showEnergyTrendFallback = false,
+}: LifeMapChartProps) {
   // Normalize data - convert null/undefined scores to 0
   const normalizedData = data.map((item) => ({
     domain: item.domain,
     score: item.score ?? 0,
   }));
 
-  // Show empty state when all scores are 0
-  if (isDataEmpty(data)) {
+  const dataIsEmpty = isDataEmpty(normalizedData);
+
+  // Case 1: No reviews at all - show empty state
+  if (dataIsEmpty && !hasReviews) {
     return (
-      <EmptyState
-        icon={Compass}
-        title="Your Life Map Awaits"
-        message="Complete your first daily review to start tracking your life domains. Each review helps build a picture of your overall well-being."
-        ctaText="Start Your First Review"
-        ctaHref="/daily"
-      />
+      <div
+        data-testid="empty-state"
+        style={{
+          height,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          padding: '2rem',
+        }}
+      >
+        <p style={{ fontSize: '1.125rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+          Complete your first review
+        </p>
+        <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+          Start tracking your life domains by completing a daily review.
+        </p>
+      </div>
     );
   }
 
+  // Case 2: Domain data is empty but we have energy trend data - show energy trend fallback
+  if (dataIsEmpty && showEnergyTrendFallback && energyTrendData.length > 0) {
+    return (
+      <div style={{ height }}>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <p style={{ fontSize: '1rem', fontWeight: 500 }}>Energy Trend</p>
+          <p style={{ color: '#6b7280', fontSize: '0.75rem' }}>
+            Add domain ratings in daily reviews to unlock full Life Map
+          </p>
+        </div>
+        <ResponsiveContainer width="100%" height={height - 60}>
+          <LineChart data={energyTrendData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis domain={[0, 10]} />
+            <Line
+              type="monotone"
+              dataKey="energy"
+              stroke="#8884d8"
+              strokeWidth={2}
+              dot={{ fill: '#8884d8' }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+
+  // Case 3: Regular radar chart with domain data
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <RadarChart data={normalizedData} outerRadius={isMobile ? '65%' : '80%'}>
+      <RadarChart data={normalizedData}>
         <PolarGrid />
-        <PolarAngleAxis
-          dataKey="domain"
-          tick={(props) => <CustomTick {...props} isMobile={isMobile} />}
-        />
+        <PolarAngleAxis dataKey="domain" />
         <PolarRadiusAxis angle={90} domain={[0, 10]} />
         <Radar
           name="Life Map"

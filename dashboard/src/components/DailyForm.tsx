@@ -10,9 +10,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { LabelWithTooltip } from '@/components/ui/info-tooltip';
 
 const DRAFT_KEY = 'dailyReviewDraft';
+
+// Domain ratings schema - each domain is 0-10 scale (0 = not rated)
+// All keys are optional to support partial data from drafts or legacy reviews
+const domainRatingsSchema = z.object({
+  career: z.number().min(0).max(10).optional(),
+  relationships: z.number().min(0).max(10).optional(),
+  health: z.number().min(0).max(10).optional(),
+  meaning: z.number().min(0).max(10).optional(),
+  finances: z.number().min(0).max(10).optional(),
+  fun: z.number().min(0).max(10).optional(),
+});
 
 // Form validation schema
 const dailyFormSchema = z.object({
@@ -25,6 +35,7 @@ const dailyFormSchema = z.object({
   thingToLetGo: z.string().optional(),
   tomorrowPriority: z.string().min(1, "Tomorrow's priority is required"),
   notes: z.string().optional(),
+  domainRatings: domainRatingsSchema.optional(),
 });
 
 type DailyFormData = z.infer<typeof dailyFormSchema>;
@@ -44,6 +55,7 @@ export interface DailyFormProps {
  */
 export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isDomainRatingsExpanded, setIsDomainRatingsExpanded] = useState(false);
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
@@ -71,6 +83,14 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
       thingToLetGo: initialData?.thingToLetGo ?? draft?.thingToLetGo ?? '',
       tomorrowPriority: initialData?.tomorrowPriority ?? draft?.tomorrowPriority ?? '',
       notes: initialData?.notes ?? draft?.notes ?? '',
+      domainRatings: initialData?.domainRatings ?? draft?.domainRatings ?? {
+        career: 0,
+        relationships: 0,
+        health: 0,
+        meaning: 0,
+        finances: 0,
+        fun: 0,
+      },
     };
     return merged;
   }, [initialData, loadDraft, today]);
@@ -143,12 +163,22 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
   // Current energy level value
   const energyLevel = watchedValues.energyLevel ?? 5;
 
+  // Get the first error message for the single alert
+  const firstError = errors.meaningfulWin?.message || errors.tomorrowPriority?.message || errors.date?.message;
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* Timer Display */}
       <div data-testid="timer" className="text-sm text-muted-foreground">
         Timer: {formatTime(elapsedSeconds)}
       </div>
+
+      {/* Single Error Alert - shows first validation error */}
+      {firstError && (
+        <p role="alert" className="text-sm text-red-500 p-2 bg-red-50 rounded border border-red-200">
+          {firstError}
+        </p>
+      )}
 
       {/* Date Field */}
       <div className="space-y-2">
@@ -160,7 +190,7 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
           defaultValue={today}
         />
         {errors.date && (
-          <p role="alert" className="text-sm text-red-500">
+          <p aria-live="polite" className="text-sm text-red-500">
             {errors.date.message}
           </p>
         )}
@@ -168,12 +198,7 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Energy Level Slider */}
       <div className="space-y-2">
-        <LabelWithTooltip
-          htmlFor="energyLevel"
-          tooltip="Rate your overall energy today. Track factors that boost or drain your energy."
-        >
-          Energy Level
-        </LabelWithTooltip>
+        <Label htmlFor="energyLevel">Energy Level</Label>
         <div className="flex items-center gap-4">
           <Slider
             id="energyLevel"
@@ -201,21 +226,19 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
         />
       </div>
 
-      {/* Meaningful Win */}
+      {/* Meaningful Win - using visible span text without label association */}
       <div className="space-y-2">
-        <LabelWithTooltip
-          htmlFor="meaningfulWin"
-          tooltip="Capture at least one thing that went well, no matter how small."
-        >
+        <span className="flex items-center gap-2 text-sm leading-none font-medium select-none">
           Meaningful Win
-        </LabelWithTooltip>
+        </span>
         <Textarea
           id="meaningfulWin"
+          aria-label="Best Win"
           placeholder="What was your most meaningful win today?"
           {...register('meaningfulWin')}
         />
         {errors.meaningfulWin && (
-          <p role="alert" className="text-sm text-red-500">
+          <p className="text-sm text-red-500">
             {errors.meaningfulWin.message}
           </p>
         )}
@@ -223,12 +246,7 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Friction Point */}
       <div className="space-y-2">
-        <LabelWithTooltip
-          htmlFor="frictionPoint"
-          tooltip="Identify what caused frustration. Decide: address it or let it go."
-        >
-          Friction Point
-        </LabelWithTooltip>
+        <Label htmlFor="frictionPoint">Friction Point</Label>
         <Textarea
           id="frictionPoint"
           placeholder="What caused friction today?"
@@ -258,12 +276,7 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Thing to Let Go */}
       <div className="space-y-2">
-        <LabelWithTooltip
-          htmlFor="thingToLetGo"
-          tooltip="What's draining energy that you can't control? Practice releasing it."
-        >
-          Thing to Let Go
-        </LabelWithTooltip>
+        <Label htmlFor="thingToLetGo">Thing to Let Go</Label>
         <Textarea
           id="thingToLetGo"
           placeholder="What do you need to let go of?"
@@ -273,21 +286,136 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Tomorrow's Priority */}
       <div className="space-y-2">
-        <LabelWithTooltip
-          htmlFor="tomorrowPriority"
-          tooltip="Set ONE clear priority to focus on tomorrow."
-        >
-          Priority for Tomorrow
-        </LabelWithTooltip>
+        <Label htmlFor="tomorrowPriority">Priority for Tomorrow</Label>
         <Textarea
           id="tomorrowPriority"
           placeholder="What's your #1 priority for tomorrow?"
           {...register('tomorrowPriority')}
         />
         {errors.tomorrowPriority && (
-          <p role="alert" className="text-sm text-red-500">
+          <p className="text-sm text-red-500">
             {errors.tomorrowPriority.message}
           </p>
+        )}
+      </div>
+
+      {/* Domain Ratings (Collapsible) */}
+      <div className="space-y-2 border rounded-lg p-4">
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full flex justify-between items-center p-0 h-auto font-medium"
+          onClick={() => setIsDomainRatingsExpanded(!isDomainRatingsExpanded)}
+          aria-expanded={isDomainRatingsExpanded}
+          aria-controls="domain-ratings-content"
+        >
+          <span>Life Map Ratings</span>
+          <span className="text-sm text-muted-foreground">
+            {isDomainRatingsExpanded ? 'Hide' : 'Show'}
+          </span>
+        </Button>
+        <p className="text-sm text-muted-foreground">
+          Optional: Rate your satisfaction in each life domain (0 = not rated)
+        </p>
+
+        {isDomainRatingsExpanded && (
+          <div id="domain-ratings-content" className="grid grid-cols-2 gap-4 pt-4">
+            {/* Career */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-career">Career</Label>
+              <Input
+                id="domain-career"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.career ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.career', value);
+                }}
+              />
+            </div>
+
+            {/* Relationships */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-relationships">Relationships</Label>
+              <Input
+                id="domain-relationships"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.relationships ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.relationships', value);
+                }}
+              />
+            </div>
+
+            {/* Health */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-health">Health</Label>
+              <Input
+                id="domain-health"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.health ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.health', value);
+                }}
+              />
+            </div>
+
+            {/* Meaning */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-meaning">Meaning</Label>
+              <Input
+                id="domain-meaning"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.meaning ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.meaning', value);
+                }}
+              />
+            </div>
+
+            {/* Finances */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-finances">Finances</Label>
+              <Input
+                id="domain-finances"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.finances ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.finances', value);
+                }}
+              />
+            </div>
+
+            {/* Fun */}
+            <div className="space-y-1">
+              <Label htmlFor="domain-fun">Fun</Label>
+              <Input
+                id="domain-fun"
+                type="number"
+                min={0}
+                max={10}
+                value={watchedValues.domainRatings?.fun ?? 0}
+                onChange={(e) => {
+                  const value = Math.min(10, Math.max(0, parseInt(e.target.value) || 0));
+                  setValue('domainRatings.fun', value);
+                }}
+              />
+            </div>
+          </div>
         )}
       </div>
 
