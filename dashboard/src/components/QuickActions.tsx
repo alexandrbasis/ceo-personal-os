@@ -183,6 +183,16 @@ export function QuickActions({ lastReviewDate, lastDailyReviewDate, lastWeeklyRe
         <Button onClick={handleStartWeeklyReview}>Start Weekly Review</Button>
       </div>
 
+      {/* Goals Section */}
+      <div data-testid="goals-section" className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">View & edit your goals</span>
+        </div>
+        <Button variant="secondary" asChild>
+          <Link href="/goals">Goals (1/3/10 Year)</Link>
+        </Button>
+      </div>
+
       {/* View All Link */}
       <div className="pt-2 border-t">
         <Button variant="outline" asChild>
