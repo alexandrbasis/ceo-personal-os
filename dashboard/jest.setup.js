@@ -1,16 +1,18 @@
 import '@testing-library/jest-dom';
 
-// Mock next/navigation
+// Mock next/navigation with a singleton router mock
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  prefetch: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+};
+
 jest.mock('next/navigation', () => ({
   useRouter() {
-    return {
-      push: jest.fn(),
-      replace: jest.fn(),
-      prefetch: jest.fn(),
-      back: jest.fn(),
-      forward: jest.fn(),
-      refresh: jest.fn(),
-    };
+    return mockRouter;
   },
   useSearchParams() {
     return new URLSearchParams();
@@ -22,6 +24,16 @@ jest.mock('next/navigation', () => ({
     return {};
   },
 }));
+
+// Reset router mocks before each test
+beforeEach(() => {
+  mockRouter.push.mockClear();
+  mockRouter.replace.mockClear();
+  mockRouter.prefetch.mockClear();
+  mockRouter.back.mockClear();
+  mockRouter.forward.mockClear();
+  mockRouter.refresh.mockClear();
+});
 
 // DOM-specific mocks - only run in browser/jsdom environment
 if (typeof window !== 'undefined') {

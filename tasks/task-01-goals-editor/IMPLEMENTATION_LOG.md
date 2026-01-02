@@ -36,7 +36,43 @@
 
 ---
 
+### Criterion 1: AC1 - GoalsPage Component
+**Status**: Complete
+**Started**: 2026-01-02T21:14:00Z | **Completed**: 2026-01-02T21:25:00Z
+
+**Test File**: `src/__tests__/components/GoalsPage.test.tsx`
+**Tests**: 33 passing
+
+**Implementation**:
+- Created `src/components/GoalsPage.tsx`: Main goals viewing component
+  - Tabs for 1-year, 3-year, 10-year goals using shadcn/ui Tabs
+  - Fetches content from `/api/goals/[timeframe]` endpoints
+  - Markdown rendering using react-markdown + remark-gfm (with mocks for Jest)
+  - Status badges (On Track/Needs Attention/Behind) with appropriate styling
+  - Last updated display from metadata
+  - Loading state while fetching
+  - Error state with retry button
+  - Empty state for no content
+  - Edit button navigates to `/goals/edit?timeframe=[activeTab]`
+  - Link to quarterly reviews page
+  - Strips YAML frontmatter from content before rendering
+- Created `src/app/goals/page.tsx`: Next.js page wrapper for /goals route
+- Created `src/__mocks__/react-markdown.tsx`: Jest mock for react-markdown (ESM module)
+- Created `src/__mocks__/remark-gfm.ts`: Jest mock for remark-gfm (ESM module)
+- Updated `jest.config.js`: Added moduleNameMapper for react-markdown and remark-gfm mocks
+- Updated `jest.setup.js`: Singleton mock router for consistent testing
+
+**Commit**: Pending
+
+**Validation**:
+- Tests: Pass (33/33)
+- Lint: Clean (no new errors, only pre-existing warnings)
+- Build: Pass (Next.js build successful)
+- TypeScript: Pass via build
+
+---
+
 ## Summary
-**Completed**: 1/1 criteria (AC3)
-**Current**: Done with AC3
-**Next**: AC4 - GoalsEditor Component (to be assigned)
+**Completed**: 2/4 criteria (AC3, AC1)
+**Current**: Done with AC1
+**Next**: AC2 - GoalsEditor Component (to be assigned)
