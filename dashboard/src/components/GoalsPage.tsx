@@ -124,7 +124,7 @@ export function GoalsPage() {
   };
 
   const handleEdit = () => {
-    router.push(`/goals/edit?timeframe=${activeTab}`);
+    router.push(`/goals/edit/${activeTab}`);
   };
 
   const { data, loading, error } = goalState;
