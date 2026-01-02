@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
           <div className="flex items-center justify-center py-16">
@@ -120,7 +120,7 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
           <div className="text-red-500">{error}</div>
@@ -130,7 +130,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+    <div className="min-h-screen bg-background">
       {/* Welcome Tour Modal */}
       <WelcomeTour forceShow={showTour} onComplete={handleTourComplete} />
 

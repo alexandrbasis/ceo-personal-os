@@ -340,7 +340,7 @@ export function WeeklyForm({ onSubmit, initialData }: WeeklyFormProps) {
 
       {/* One Adjustment for Next Week */}
       <div className="space-y-2">
-        <span className="flex items-center gap-2 text-sm leading-none font-medium select-none">
+        <span className="flex items-center gap-2 text-sm leading-none font-medium select-none text-foreground">
           Adjustment for Next Week
         </span>
         <Textarea

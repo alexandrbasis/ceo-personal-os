@@ -228,7 +228,7 @@ export function DailyForm({ onSubmit, initialData }: DailyFormProps) {
 
       {/* Meaningful Win - using visible span text without label association */}
       <div className="space-y-2">
-        <span className="flex items-center gap-2 text-sm leading-none font-medium select-none">
+        <span className="flex items-center gap-2 text-sm leading-none font-medium select-none text-foreground">
           Meaningful Win
         </span>
         <Textarea

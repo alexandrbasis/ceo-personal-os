@@ -84,7 +84,7 @@ export default function EditDailyReviewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8 max-w-2xl">
           <div className="text-muted-foreground">Loading...</div>
         </main>
@@ -94,7 +94,7 @@ export default function EditDailyReviewPage() {
 
   if (error || !review) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8 max-w-2xl">
           <Card>
             <CardContent className="py-8">
@@ -126,7 +126,7 @@ export default function EditDailyReviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader>

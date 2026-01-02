@@ -139,6 +139,16 @@
     /* Border and Input */
     --border: #3D3D3A;
     --input: #3D3D3A;
+
+    /* Custom Color Palette - Dark Mode (sync with [data-theme="dark"]) */
+    --color-bg: #1A1A19;
+    --color-surface: #242423;
+    --color-muted: #2E2E2C;
+    --color-border: #3D3D3A;
+    --color-text: #F5F5F0;
+    --color-text-muted: #A3A39E;
+    --color-primary: #5BA3B5;
+    --color-primary-hover: #7BBCCC;
   }
 }
 
