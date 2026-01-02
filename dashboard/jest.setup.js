@@ -1,5 +1,37 @@
 import '@testing-library/jest-dom';
 
+// Extend toHaveValue to properly support asymmetric matchers
+// This fixes compatibility issues with Jest 30 + jest-dom 6.x
+const originalToHaveValue = expect.extend ? null : undefined;
+
+expect.extend({
+  toHaveValue(element, expected) {
+    const value = element.value;
+
+    // Handle asymmetric matchers (like expect.stringContaining)
+    if (expected && typeof expected.asymmetricMatch === 'function') {
+      const pass = expected.asymmetricMatch(value);
+      return {
+        pass,
+        message: () =>
+          pass
+            ? `expected element not to have value matching ${expected.toString()}, but received: ${value}`
+            : `expected element to have value matching ${expected.toString()}, but received: ${value}`,
+      };
+    }
+
+    // Fall back to original behavior for non-asymmetric matchers
+    const pass = value === expected;
+    return {
+      pass,
+      message: () =>
+        pass
+          ? `expected element not to have value ${expected}`
+          : `expected element to have value ${expected}, but received: ${value}`,
+    };
+  },
+});
+
 // Mock next/navigation with a singleton router mock
 const mockRouter = {
   push: jest.fn(),
