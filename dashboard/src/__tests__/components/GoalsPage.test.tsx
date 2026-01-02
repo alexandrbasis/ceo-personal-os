@@ -406,7 +406,7 @@ Check [this link](https://example.com) for more info.`,
         const badge = screen.getByText(/on.track/i);
         expect(badge).toBeInTheDocument();
         // Should have success/green styling
-        expect(badge).toHaveClass(/green|success/i);
+        expect(badge.className).toMatch(/green/i);
       });
     });
 
@@ -430,7 +430,7 @@ Check [this link](https://example.com) for more info.`,
         const badge = screen.getByText(/needs.attention/i);
         expect(badge).toBeInTheDocument();
         // Should have warning/yellow styling
-        expect(badge).toHaveClass(/yellow|warning|amber/i);
+        expect(badge.className).toMatch(/yellow/i);
       });
     });
 
@@ -454,7 +454,7 @@ Check [this link](https://example.com) for more info.`,
         const badge = screen.getByText(/behind/i);
         expect(badge).toBeInTheDocument();
         // Should have error/red styling
-        expect(badge).toHaveClass(/red|error|danger/i);
+        expect(badge.className).toMatch(/red/i);
       });
     });
 
