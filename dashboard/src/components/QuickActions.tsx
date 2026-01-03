@@ -193,6 +193,16 @@ export function QuickActions({ lastReviewDate, lastDailyReviewDate, lastWeeklyRe
         </Button>
       </div>
 
+      {/* North Star Section */}
+      <div data-testid="north-star-section" className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Your core direction</span>
+        </div>
+        <Button variant="secondary" asChild>
+          <Link href="/north-star">North Star</Link>
+        </Button>
+      </div>
+
       {/* View All Link */}
       <div className="pt-2 border-t">
         <Button variant="outline" asChild>

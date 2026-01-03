@@ -34,3 +34,6 @@ export const LIFE_MAP_PATH = path.join(
 export const GOALS_PATH = path.join(MARKDOWN_BASE_PATH, 'goals');
 
 export const GOALS_DRAFTS_PATH = path.join(GOALS_PATH, '.drafts');
+
+// North Star file
+export const NORTH_STAR_PATH = path.join(MARKDOWN_BASE_PATH, 'north_star.md');
