@@ -44,7 +44,47 @@
 ---
 
 ### Criterion 3: PUT /api/life-map endpoint (AC3)
-**Status**: Not Started
+**Status**: Complete
+**Started**: 2026-01-03T13:19:00Z | **Completed**: 2026-01-03T13:25:00Z
+
+**Test File**: `src/__tests__/api/life-map.test.ts`
+**Tests**: 16 PUT tests passing (22 total in file)
+
+**Implementation**:
+- Updated `src/app/api/life-map/route.ts`: Added PUT handler
+
+**PUT Handler Features**:
+1. Request Validation
+   - Returns 400 for invalid JSON body
+   - Returns 400 when `domains` object is missing
+   - Returns 400 when score is not a number
+
+2. Score Processing
+   - Clamps scores below 1 to 1 (silent clamping)
+   - Clamps scores above 10 to 10 (silent clamping)
+   - Truncates decimal scores to integers
+
+3. Partial Updates
+   - Supports updating only some domains
+   - Preserves existing values for unchanged domains
+   - Handles undefined assessment (treats as preserve existing)
+
+4. File Operations
+   - Reads existing file to preserve non-table content
+   - Uses `updateLifeMapFile()` to update only the table
+   - Returns 500 on read/write errors
+
+5. Response Format
+   - Returns `{ success: true, domains: {...} }` on success
+   - Returns `{ error: string }` on failure
+
+**Commit**: Pending user approval
+
+**Validation**:
+- Tests: Pass (22/22 in life-map API test file)
+- Build: Success
+- Lint: Clean (only pre-existing warnings)
+- Types: No new errors (pre-existing test errors for AC4/AC5 components)
 
 ---
 
@@ -59,5 +99,5 @@
 ---
 
 ## Summary
-**Completed**: 2/5 criteria (AC1 was pre-existing, AC2 just completed)
-**Current**: Criterion 2 complete, awaiting commit approval
+**Completed**: 3/5 criteria (AC1 was pre-existing, AC2 + AC3 complete)
+**Current**: Criterion 3 complete, awaiting commit approval
