@@ -131,7 +131,6 @@ describe('AC4: Dashboard Life Map Integration', () => {
 
   describe('Edit Button Navigation (AC4)', () => {
     it('should navigate to /life-map/edit when edit button clicked', async () => {
-      const user = userEvent.setup();
       const DashboardPage = (await import('@/app/page')).default;
 
       render(<DashboardPage />);
@@ -140,15 +139,11 @@ describe('AC4: Dashboard Life Map Integration', () => {
         expect(screen.getByTestId('life-map-chart')).toBeInTheDocument();
       });
 
-      // Find and click the edit button
-      const editButton = screen.getByTestId('life-map-edit-button') ||
-                        screen.getByRole('link', { name: /edit/i }) ||
-                        screen.getByRole('button', { name: /edit/i });
+      // Find the edit button/link
+      const editButton = screen.getByTestId('life-map-edit-button');
 
-      await user.click(editButton);
-
-      // Should navigate to edit page
-      expect(mockRouter.push).toHaveBeenCalledWith('/life-map/edit');
+      // Verify it's a link with correct href (Link component navigation)
+      expect(editButton).toHaveAttribute('href', '/life-map/edit');
     });
 
     it('should have correct href if using Link component', async () => {

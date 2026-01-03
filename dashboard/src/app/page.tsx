@@ -144,10 +144,18 @@ export default function DashboardPage() {
           {/* Life Map Chart */}
           <Card>
             <CardHeader>
-              <CardTitle>
+              <CardTitle className="flex items-center justify-between">
                 <TitleWithTooltip tooltip="Rate each life domain 1-10 based on your current satisfaction. This visualization helps identify areas needing attention.">
                   Life Map
                 </TitleWithTooltip>
+                <Link
+                  href="/life-map/edit"
+                  data-testid="life-map-edit-button"
+                  aria-label="Edit Life Map"
+                  className="text-sm font-normal text-primary hover:underline"
+                >
+                  Edit
+                </Link>
               </CardTitle>
             </CardHeader>
             <CardContent>
