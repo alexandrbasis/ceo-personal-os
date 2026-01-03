@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FolderArchive } from 'lucide-react';
@@ -13,10 +13,10 @@ import { Button } from '@/components/ui/button';
 import type { AnyReviewListItem } from '@/lib/types';
 
 /**
- * All Reviews Page
- * Displays combined list of all daily + weekly reviews with filtering and sorting
+ * Inner component that uses useSearchParams
+ * Wrapped in Suspense to avoid SSR hydration issues
  */
-export default function AllReviewsPage() {
+function AllReviewsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -262,5 +262,29 @@ export default function AllReviewsPage() {
         )}
       </main>
     </div>
+  );
+}
+
+/**
+ * All Reviews Page
+ * Displays combined list of all daily + weekly reviews with filtering and sorting
+ */
+export default function AllReviewsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background">
+        <main className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold">All Reviews</h1>
+            <Button asChild variant="outline">
+              <Link href="/">Back to Dashboard</Link>
+            </Button>
+          </div>
+          <div className="text-muted-foreground">Loading...</div>
+        </main>
+      </div>
+    }>
+      <AllReviewsContent />
+    </Suspense>
   );
 }

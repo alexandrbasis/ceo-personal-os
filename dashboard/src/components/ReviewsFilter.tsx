@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
@@ -41,10 +40,10 @@ function isValidFilterType(type: string | null): type is ReviewFilterType {
  * - Filter persistence across page refresh
  * - Optional display of review counts per type
  * - Keyboard navigation support
- * - Supports both controlled and uncontrolled modes
+ * - Controlled component - parent manages filter state
  */
 export function ReviewsFilter({
-  currentFilter,
+  currentFilter = 'all',
   onFilterChange,
   updateUrl = false,
   readFromUrl = false,
@@ -55,47 +54,23 @@ export function ReviewsFilter({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Determine initial filter from URL or props
-  const getInitialFilter = (): ReviewFilterType => {
+  // Derive active filter: URL takes precedence if readFromUrl is enabled
+  const getActiveFilter = (): ReviewFilterType => {
     if (readFromUrl) {
       const urlType = searchParams.get('type');
       if (isValidFilterType(urlType)) {
         return urlType;
       }
+      // If URL has no type or invalid type, use 'all'
+      return 'all';
     }
-    return currentFilter || 'all';
+    return currentFilter;
   };
 
-  // Internal state for uncontrolled mode
-  const [internalFilter, setInternalFilter] = useState<ReviewFilterType>(getInitialFilter);
-
-  // Sync internal state with currentFilter prop when it changes
-  useEffect(() => {
-    if (currentFilter !== undefined) {
-      setInternalFilter(currentFilter);
-    }
-  }, [currentFilter]);
-
-  // Sync with URL params when readFromUrl is enabled
-  useEffect(() => {
-    if (readFromUrl) {
-      const urlType = searchParams.get('type');
-      if (isValidFilterType(urlType)) {
-        setInternalFilter(urlType);
-      } else {
-        setInternalFilter('all');
-      }
-    }
-  }, [readFromUrl, searchParams]);
-
-  // Use internal state as the active filter
-  const activeFilter = internalFilter;
+  const activeFilter = getActiveFilter();
 
   const handleFilterChange = (value: string) => {
     const filterValue = value as ReviewFilterType;
-
-    // Update internal state for uncontrolled mode
-    setInternalFilter(filterValue);
 
     // Notify parent
     onFilterChange(filterValue);
