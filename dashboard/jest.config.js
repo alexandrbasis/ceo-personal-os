@@ -13,6 +13,8 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^recharts$': '<rootDir>/src/__mocks__/recharts.tsx',
+    '^react-markdown$': '<rootDir>/src/__mocks__/react-markdown.tsx',
+    '^remark-gfm$': '<rootDir>/src/__mocks__/remark-gfm.ts',
   },
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',

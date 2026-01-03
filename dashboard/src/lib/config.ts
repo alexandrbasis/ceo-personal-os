@@ -29,3 +29,8 @@ export const LIFE_MAP_PATH = path.join(
   'frameworks',
   'life_map.md'
 );
+
+// Goals directories
+export const GOALS_PATH = path.join(MARKDOWN_BASE_PATH, 'goals');
+
+export const GOALS_DRAFTS_PATH = path.join(GOALS_PATH, '.drafts');

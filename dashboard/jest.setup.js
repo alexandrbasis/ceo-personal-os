@@ -1,16 +1,45 @@
 import '@testing-library/jest-dom';
+import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
 
-// Mock next/navigation
+// Get the original toHaveValue from jest-dom
+const originalToHaveValue = jestDomMatchers.toHaveValue;
+
+// Extend toHaveValue to properly support asymmetric matchers
+// This fixes compatibility issues with Jest 30 + jest-dom 6.x
+expect.extend({
+  toHaveValue(element, expected) {
+    // Handle asymmetric matchers (like expect.stringContaining)
+    if (expected && typeof expected.asymmetricMatch === 'function') {
+      const value = element.value;
+      const pass = expected.asymmetricMatch(value);
+      return {
+        pass,
+        message: () =>
+          pass
+            ? `expected element not to have value matching ${expected.toString()}, but received: ${value}`
+            : `expected element to have value matching ${expected.toString()}, but received: ${value}`,
+      };
+    }
+
+    // Delegate to original jest-dom matcher for normal cases
+    // This preserves richer semantics (select multiple, number coercion, etc.)
+    return originalToHaveValue.call(this, element, expected);
+  },
+});
+
+// Mock next/navigation with a singleton router mock
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  prefetch: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+};
+
 jest.mock('next/navigation', () => ({
   useRouter() {
-    return {
-      push: jest.fn(),
-      replace: jest.fn(),
-      prefetch: jest.fn(),
-      back: jest.fn(),
-      forward: jest.fn(),
-      refresh: jest.fn(),
-    };
+    return mockRouter;
   },
   useSearchParams() {
     return new URLSearchParams();
@@ -22,6 +51,16 @@ jest.mock('next/navigation', () => ({
     return {};
   },
 }));
+
+// Reset router mocks before each test
+beforeEach(() => {
+  mockRouter.push.mockClear();
+  mockRouter.replace.mockClear();
+  mockRouter.prefetch.mockClear();
+  mockRouter.back.mockClear();
+  mockRouter.forward.mockClear();
+  mockRouter.refresh.mockClear();
+});
 
 // DOM-specific mocks - only run in browser/jsdom environment
 if (typeof window !== 'undefined') {
