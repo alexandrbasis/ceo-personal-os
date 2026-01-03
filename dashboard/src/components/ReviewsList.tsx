@@ -10,7 +10,9 @@ import { EmptyState } from '@/components/EmptyState';
 export interface ReviewsListProps {
   reviews: ReviewListItem[] | AnyReviewListItem[];
   limit?: number;
-  type?: 'daily' | 'weekly';
+  type?: 'daily' | 'weekly' | 'all';
+  /** Show type badges (Daily/Weekly) on each item - useful for combined view */
+  showTypeBadge?: boolean;
 }
 
 /**
@@ -91,11 +93,14 @@ function formatWeekRange(dateStr: string): string {
  * - Configurable limit (default: 5)
  * - Encouraging empty state when no reviews exist
  * - Type filtering: when type="weekly", only shows weekly reviews
+ * - Type badges: optional badges showing Daily/Weekly for combined view
  */
-export function ReviewsList({ reviews, limit = 5, type = 'daily' }: ReviewsListProps) {
-  // Filter reviews by type if specified
+export function ReviewsList({ reviews, limit = 5, type = 'daily', showTypeBadge = false }: ReviewsListProps) {
+  // Filter reviews by type if specified (but not when type='all')
   const filteredReviews = type === 'weekly'
     ? (reviews as AnyReviewListItem[]).filter(r => isWeeklyReview(r))
+    : type === 'daily'
+    ? (reviews as AnyReviewListItem[]).filter(r => !isWeeklyReview(r))
     : reviews;
 
   if (filteredReviews.length === 0) {
@@ -134,9 +139,19 @@ export function ReviewsList({ reviews, limit = 5, type = 'daily' }: ReviewsListP
               <Link
                 href={`/weekly/${review.date}`}
                 className="block p-4 rounded-lg border hover:bg-accent transition-colors"
-                aria-label="weekly review"
+                aria-label={`${formatWeekRange(review.date)}`}
               >
                 <div className="flex items-center justify-between gap-4">
+                  {/* Type Badge (for combined view) */}
+                  {showTypeBadge && (
+                    <span
+                      data-testid="type-badge-weekly"
+                      className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+                    >
+                      Weekly
+                    </span>
+                  )}
+
                   {/* Week Number Badge */}
                   <span
                     data-testid="weekly-indicator"
@@ -169,6 +184,16 @@ export function ReviewsList({ reviews, limit = 5, type = 'daily' }: ReviewsListP
               className="block p-4 rounded-lg border hover:bg-accent transition-colors"
             >
               <div className="flex items-center justify-between gap-4">
+                {/* Type Badge (for combined view) */}
+                {showTypeBadge && (
+                  <span
+                    data-testid="type-badge-daily"
+                    className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                  >
+                    Daily
+                  </span>
+                )}
+
                 {/* Date */}
                 <div data-testid="review-date" className="text-sm font-medium">
                   {formatDisplayDate(review.date)}
