@@ -66,7 +66,28 @@
 ---
 
 ### Criterion 2: Date Sorting (SortToggle Component)
-**Status**: Pending
+**Status**: Complete
+**Started**: 2026-01-03T18:25:00Z | **Completed**: 2026-01-03T18:35:00Z
+
+**Test File**: `dashboard/src/__tests__/components/SortToggle.test.tsx`
+**Tests**: 26/26 passing
+
+**Implementation**:
+- Created `dashboard/src/components/SortToggle.tsx`: New sort toggle component
+  - Toggle button with visual arrow indicator (ArrowUp/ArrowDown from lucide-react)
+  - Two states: "Newest First" (desc, default) and "Oldest First" (asc)
+  - URL state management via Next.js useSearchParams/useRouter
+  - Supports both controlled and uncontrolled modes via props
+  - Proper accessibility: aria-label with sort direction, keyboard support (Enter/Space)
+  - Visual indicators: sort-desc-indicator and sort-asc-indicator test IDs
+  - Hover state via Button component styling
+  - Disabled state support
+  - Preserves other URL params when updating sort
+
+**Validation**:
+- Tests: Pass (26/26)
+- Lint: Clean (no errors in new file)
+- Types: Pass
 
 ---
 
@@ -76,15 +97,16 @@
 ---
 
 ## Summary
-**Completed**: 2/4 criteria (AC4, AC1)
-**Current**: AC1 complete with 2 test failures due to test bugs
-**Tests Passing**: 36/75 for this task (20 API + 16 filter)
+**Completed**: 3/4 criteria (AC4, AC1, AC2)
+**Current**: AC2 complete - ready for AC3
+**Tests Passing**: 62/101 for this task (20 API + 16 filter + 26 sort)
 
 ## Files Changed
 
 ### Created
 - `dashboard/src/app/api/reviews/route.ts` - Aggregated reviews API endpoint
 - `dashboard/src/components/ReviewsFilter.tsx` - Type filter component
+- `dashboard/src/components/SortToggle.tsx` - Date sort toggle component
 
 ### Modified
 - None
