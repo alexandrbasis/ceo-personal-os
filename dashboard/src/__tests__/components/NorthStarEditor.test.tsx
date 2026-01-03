@@ -102,11 +102,9 @@ To build meaningful products that help people live better lives.
         />
       );
 
-      // Content should be displayed - either in textbox value or innerHTML
-      expect(
-        screen.getByDisplayValue(sampleContent) ||
-          screen.getByText(/My North Star/i)
-      ).toBeInTheDocument();
+      // Content should be displayed in the textbox
+      const editor = screen.getByRole('textbox');
+      expect(editor).toHaveValue(sampleContent);
     });
 
     it('should update content when typing', async () => {

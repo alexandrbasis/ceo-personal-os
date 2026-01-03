@@ -1,15 +1,26 @@
 import React from 'react';
 
+interface ComponentOverrides {
+  h1?: React.ComponentType<{ children: React.ReactNode }>;
+  h2?: React.ComponentType<{ children: React.ReactNode }>;
+  h3?: React.ComponentType<{ children: React.ReactNode }>;
+  h4?: React.ComponentType<{ children: React.ReactNode }>;
+  h5?: React.ComponentType<{ children: React.ReactNode }>;
+  h6?: React.ComponentType<{ children: React.ReactNode }>;
+}
+
 interface ReactMarkdownProps {
   children: string;
   remarkPlugins?: unknown[];
+  components?: ComponentOverrides;
 }
 
 /**
  * Mock ReactMarkdown component for Jest tests
  * Renders markdown content using basic HTML transformation
+ * Supports components prop for heading overrides
  */
-const ReactMarkdown = ({ children }: ReactMarkdownProps) => {
+const ReactMarkdown = ({ children, components }: ReactMarkdownProps) => {
   // Parse markdown content and render as HTML elements
   const lines = children.split('\n');
   const elements: React.ReactNode[] = [];
@@ -151,9 +162,17 @@ const ReactMarkdown = ({ children }: ReactMarkdownProps) => {
         const level = headingMatch[1].length;
         const text = headingMatch[2];
         const HeadingTag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-        elements.push(
-          React.createElement(HeadingTag, { key: `h-${index}` }, processLinks(text))
-        );
+        const CustomComponent = components?.[HeadingTag];
+
+        if (CustomComponent) {
+          elements.push(
+            <CustomComponent key={`h-${index}`}>{processLinks(text)}</CustomComponent>
+          );
+        } else {
+          elements.push(
+            React.createElement(HeadingTag, { key: `h-${index}` }, processLinks(text))
+          );
+        }
       }
       return;
     }
