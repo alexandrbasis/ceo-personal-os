@@ -81,31 +81,40 @@ export default function EditGoalsPage() {
     }
   }, [timeframe]);
 
-  const handleSave = async (newContent: string) => {
-    if (!isValidTimeframe(timeframe)) return;
-
-    try {
-      const response = await fetch(`/api/goals/${timeframe}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newContent }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save goals');
-      }
-
-      toast.success('Goals saved successfully!');
-
-      // Redirect to goals page after short delay for toast to show
-      setTimeout(() => {
-        router.push('/goals');
-      }, 500);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to save goals';
-      toast.error(message);
+  const handleSave = async (newContent: string): Promise<void> => {
+    if (!isValidTimeframe(timeframe)) {
+      throw new Error('Invalid timeframe');
     }
+
+    const response = await fetch(`/api/goals/${timeframe}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: newContent }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      const message = errorData.error || 'Failed to save goals';
+      toast.error(message);
+      throw new Error(message);
+    }
+
+    // Clear draft after successful save
+    try {
+      await fetch(`/api/goals/${timeframe}/draft`, {
+        method: 'DELETE',
+      });
+    } catch {
+      // Draft deletion failure is not critical
+      console.warn('Failed to delete draft');
+    }
+
+    toast.success('Goals saved successfully!');
+
+    // Redirect to goals page after short delay for toast to show
+    setTimeout(() => {
+      router.push('/goals');
+    }, 500);
   };
 
   const handleCancel = () => {

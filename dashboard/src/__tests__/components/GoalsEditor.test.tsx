@@ -32,7 +32,7 @@ last_updated: 2026-01-02
 Launch the new product
 `;
 
-  const mockOnSave = jest.fn();
+  const mockOnSave = jest.fn().mockResolvedValue(undefined);
   const mockOnCancel = jest.fn();
 
   beforeEach(() => {
@@ -423,7 +423,7 @@ Launch the new product
   });
 
   describe('Save Functionality (AC2)', () => {
-    it('should call PUT API on save button click', async () => {
+    it('should call onSave with content on save button click', async () => {
       jest.useRealTimers();
       const user = userEvent.setup();
       const { GoalsEditor } = await import('@/components/GoalsEditor');
@@ -441,12 +441,7 @@ Launch the new product
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/1-year'),
-          expect.objectContaining({
-            method: 'PUT',
-          })
-        );
+        expect(mockOnSave).toHaveBeenCalledWith(mockGoalContent);
       });
 
       jest.useFakeTimers();
@@ -505,7 +500,8 @@ Launch the new product
     it('should show error state when save fails', async () => {
       jest.useRealTimers();
       const user = userEvent.setup();
-      (global.fetch as jest.Mock).mockRejectedValue(new Error('Save failed'));
+      // Make onSave reject to simulate save failure
+      const mockOnSaveRejecting = jest.fn().mockRejectedValue(new Error('Save failed'));
 
       const { GoalsEditor } = await import('@/components/GoalsEditor');
 
@@ -513,7 +509,7 @@ Launch the new product
         <GoalsEditor
           timeframe="1-year"
           initialContent={mockGoalContent}
-          onSave={mockOnSave}
+          onSave={mockOnSaveRejecting}
           onCancel={mockOnCancel}
         />
       );
@@ -577,12 +573,7 @@ Launch the new product
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/1-year'),
-          expect.objectContaining({
-            body: expect.stringContaining('Modified Content'),
-          })
-        );
+        expect(mockOnSave).toHaveBeenCalledWith(expect.stringContaining('Modified Content'));
       });
 
       jest.useFakeTimers();
@@ -721,7 +712,9 @@ Launch the new product
       jest.useFakeTimers();
     });
 
-    it('should clear draft after successful save', async () => {
+    it('should call onSave which handles draft clearing', async () => {
+      // Note: Draft clearing is now handled by the parent page after successful save.
+      // This test verifies that onSave is called, which triggers the page's save logic.
       jest.useRealTimers();
       const user = userEvent.setup();
       const { GoalsEditor } = await import('@/components/GoalsEditor');
@@ -739,13 +732,7 @@ Launch the new product
       await user.click(saveButton);
 
       await waitFor(() => {
-        // Should call DELETE on draft endpoint
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/1-year/draft'),
-          expect.objectContaining({
-            method: 'DELETE',
-          })
-        );
+        expect(mockOnSave).toHaveBeenCalledWith(mockGoalContent);
       });
 
       jest.useFakeTimers();
@@ -807,7 +794,7 @@ Launch the new product
   });
 
   describe('Different Timeframes (AC2)', () => {
-    it('should save to correct endpoint for 3-year timeframe', async () => {
+    it('should call onSave for 3-year timeframe', async () => {
       jest.useRealTimers();
       const user = userEvent.setup();
       const { GoalsEditor } = await import('@/components/GoalsEditor');
@@ -825,16 +812,13 @@ Launch the new product
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/3-year'),
-          expect.any(Object)
-        );
+        expect(mockOnSave).toHaveBeenCalledWith('# Three Year Goals');
       });
 
       jest.useFakeTimers();
     });
 
-    it('should save to correct endpoint for 10-year timeframe', async () => {
+    it('should call onSave for 10-year timeframe', async () => {
       jest.useRealTimers();
       const user = userEvent.setup();
       const { GoalsEditor } = await import('@/components/GoalsEditor');
@@ -852,10 +836,7 @@ Launch the new product
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/10-year'),
-          expect.any(Object)
-        );
+        expect(mockOnSave).toHaveBeenCalledWith('# Ten Year Vision');
       });
 
       jest.useFakeTimers();
@@ -900,10 +881,7 @@ Launch the new product
       await user.keyboard('{Control>}s{/Control}');
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/goals/1-year'),
-          expect.objectContaining({ method: 'PUT' })
-        );
+        expect(mockOnSave).toHaveBeenCalledWith(mockGoalContent);
       });
 
       jest.useFakeTimers();
@@ -1039,7 +1017,8 @@ Special: < > & " ' \`
       jest.useRealTimers();
       const user = userEvent.setup();
 
-      (global.fetch as jest.Mock).mockRejectedValue(new TypeError('Failed to fetch'));
+      // Simulate network error by making onSave reject
+      const mockOnSaveNetworkError = jest.fn().mockRejectedValue(new TypeError('Failed to fetch'));
 
       const { GoalsEditor } = await import('@/components/GoalsEditor');
 
@@ -1047,7 +1026,7 @@ Special: < > & " ' \`
         <GoalsEditor
           timeframe="1-year"
           initialContent="# Goals"
-          onSave={mockOnSave}
+          onSave={mockOnSaveNetworkError}
           onCancel={mockOnCancel}
         />
       );
@@ -1056,9 +1035,9 @@ Special: < > & " ' \`
       await user.click(saveButton);
 
       await waitFor(() => {
-        // Should show network error message
+        // Should show error state
         expect(
-          screen.getByText(/network|connection|offline|failed/i)
+          screen.getByText(/error|failed/i)
         ).toBeInTheDocument();
       });
 

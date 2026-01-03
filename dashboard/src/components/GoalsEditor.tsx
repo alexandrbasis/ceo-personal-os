@@ -21,7 +21,7 @@ type SaveStatus =
 export interface GoalsEditorProps {
   timeframe: Timeframe;
   initialContent: string;
-  onSave: (content: string) => void;
+  onSave: (content: string) => Promise<void>;
   onCancel: () => void;
   checkForDraft?: boolean;
 }
@@ -146,37 +146,25 @@ export function GoalsEditor({
     };
   }, [content, timeframe]);
 
-  // Handle save
+  // Handle save - delegates persistence to parent via onSave callback
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     setStatus('saving');
 
     try {
-      const response = await fetch(`/api/goals/${timeframe}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
-      });
+      // Call parent's onSave which handles persistence (PUT)
+      await onSave(content);
 
-      if (!response.ok) {
-        throw new Error('Failed to save');
-      }
-
-      // Clear draft after successful save
-      await fetch(`/api/goals/${timeframe}/draft`, {
-        method: 'DELETE',
-      });
-
+      // Update local state after successful save
       setStatus('saved');
       setSavedContent(content);
       lastSavedContentRef.current = content;
-      onSave(content);
     } catch {
       setStatus('error');
     } finally {
       setIsSaving(false);
     }
-  }, [content, timeframe, onSave]);
+  }, [content, onSave]);
 
   // Handle cancel with unsaved changes warning
   const handleCancel = useCallback(() => {
@@ -202,11 +190,21 @@ export function GoalsEditor({
     }
   }, [draftContent]);
 
-  // Discard draft
-  const handleDiscardDraft = useCallback(() => {
+  // Discard draft - also deletes from server
+  const handleDiscardDraft = useCallback(async () => {
     setShowDraftPrompt(false);
     setDraftContent(null);
-  }, []);
+
+    // Delete draft from server so user won't be prompted again
+    try {
+      await fetch(`/api/goals/${timeframe}/draft`, {
+        method: 'DELETE',
+      });
+    } catch {
+      // Silently fail - draft prompt is already dismissed
+      console.warn('Failed to delete draft from server');
+    }
+  }, [timeframe]);
 
   // Keyboard shortcuts
   useEffect(() => {

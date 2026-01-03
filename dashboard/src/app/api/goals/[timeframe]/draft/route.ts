@@ -60,10 +60,20 @@ export async function GET(
       content,
       hasDraft: true,
     });
-  } catch {
+  } catch (error) {
+    // Check if file doesn't exist (ENOENT) - this is expected "no draft" case
+    if (error instanceof Error && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json(
+        { hasDraft: false, error: 'No draft found' },
+        { status: 404 }
+      );
+    }
+
+    // For real errors (permissions, corruption, etc.), return 500
+    console.error('Draft read error:', error);
     return NextResponse.json(
-      { hasDraft: false, error: 'No draft found' },
-      { status: 404 }
+      { hasDraft: false, error: 'Failed to read draft' },
+      { status: 500 }
     );
   }
 }

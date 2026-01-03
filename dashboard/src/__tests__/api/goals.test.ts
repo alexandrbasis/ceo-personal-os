@@ -359,7 +359,9 @@ Updated content here.
       const fs = await import('fs/promises');
       const { GET } = await import('@/app/api/goals/[timeframe]/draft/route');
 
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+      // Create error with code property like Node.js fs errors
+      const enoentError = Object.assign(new Error('ENOENT: no such file or directory'), { code: 'ENOENT' });
+      (fs.readFile as jest.Mock).mockRejectedValue(enoentError);
 
       const request = new NextRequest('http://localhost:3000/api/goals/1-year/draft');
       const response = await GET(request, { params: Promise.resolve({ timeframe: '1-year' }) });

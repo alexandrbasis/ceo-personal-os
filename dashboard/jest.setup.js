@@ -1,15 +1,16 @@
 import '@testing-library/jest-dom';
+import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
+
+// Get the original toHaveValue from jest-dom
+const originalToHaveValue = jestDomMatchers.toHaveValue;
 
 // Extend toHaveValue to properly support asymmetric matchers
 // This fixes compatibility issues with Jest 30 + jest-dom 6.x
-const originalToHaveValue = expect.extend ? null : undefined;
-
 expect.extend({
   toHaveValue(element, expected) {
-    const value = element.value;
-
     // Handle asymmetric matchers (like expect.stringContaining)
     if (expected && typeof expected.asymmetricMatch === 'function') {
+      const value = element.value;
       const pass = expected.asymmetricMatch(value);
       return {
         pass,
@@ -20,15 +21,9 @@ expect.extend({
       };
     }
 
-    // Fall back to original behavior for non-asymmetric matchers
-    const pass = value === expected;
-    return {
-      pass,
-      message: () =>
-        pass
-          ? `expected element not to have value ${expected}`
-          : `expected element to have value ${expected}, but received: ${value}`,
-    };
+    // Delegate to original jest-dom matcher for normal cases
+    // This preserves richer semantics (select multiple, number coercion, etc.)
+    return originalToHaveValue.call(this, element, expected);
   },
 });
 
