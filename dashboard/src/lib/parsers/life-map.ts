@@ -125,3 +125,65 @@ export function getLifeMapChartData(
     score: lifeMap.domains[key].score,
   }));
 }
+
+/**
+ * Capitalize first letter of a string
+ */
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/**
+ * Serialize a LifeMap object back to markdown table format
+ */
+export function serializeLifeMap(lifeMap: LifeMap): string {
+  const lines: string[] = [];
+
+  // Table header
+  lines.push('| Domain | Score (1-10) | Brief Assessment |');
+  lines.push('|--------|--------------|------------------|');
+
+  // Domain rows in the correct order
+  for (const key of DOMAIN_KEYS) {
+    const domain = lifeMap.domains[key];
+    const domainName = capitalize(key);
+    const score = domain.score;
+    const assessment = domain.assessment ?? '';
+
+    lines.push(`| ${domainName} | ${score} | ${assessment} |`);
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Update the life map table in existing file content
+ * Preserves all non-table content and only replaces the table
+ */
+export function updateLifeMapFile(fileContent: string, lifeMap: LifeMap): string {
+  const newTable = serializeLifeMap(lifeMap);
+
+  // Find the table in the file content
+  // Look for the header pattern: | Domain | Score (1-10) | Brief Assessment |
+  const tableHeaderPattern = /\| Domain \| Score \(1-10\) \| Brief Assessment \|/;
+
+  const lines = fileContent.split('\n');
+  const headerIndex = lines.findIndex((line) => tableHeaderPattern.test(line));
+
+  if (headerIndex === -1) {
+    // No table found - append the new table at the end
+    return fileContent + '\n' + newTable + '\n';
+  }
+
+  // Find the end of the table (first line that doesn't start with |, or end of file)
+  let tableEndIndex = headerIndex + 1;
+  while (tableEndIndex < lines.length && lines[tableEndIndex].startsWith('|')) {
+    tableEndIndex++;
+  }
+
+  // Replace the old table with the new one
+  const beforeTable = lines.slice(0, headerIndex);
+  const afterTable = lines.slice(tableEndIndex);
+
+  return [...beforeTable, newTable, ...afterTable].join('\n');
+}

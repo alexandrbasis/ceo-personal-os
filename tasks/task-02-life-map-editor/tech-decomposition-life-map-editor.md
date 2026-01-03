@@ -9,15 +9,15 @@ Dashboard shows Life Map radar chart (read-only) but cannot edit domain scores i
 ## Acceptance Criteria
 
 ### AC1: Life Map Edit Page
-- [ ] Page at `/life-map/edit` or edit mode on `/life-map`
-- [ ] Sliders for each of 6 domains (1-10)
+- [ ] Page at `/life-map/edit` route
+- [ ] Sliders for each of 6 domains (1-10, silent clamping)
 - [ ] Text fields for domain assessments
 - [ ] Preview of changes on radar chart
 
 ### AC2: Save to File
 - [ ] Save updates directly to `frameworks/life_map.md`
-- [ ] Preserve markdown structure
-- [ ] Show success confirmation
+- [ ] Table-only update (preserve all other markdown content)
+- [ ] Show success confirmation (toast notification)
 
 ### AC3: API
 - [ ] `PUT /api/life-map` - update file
@@ -32,11 +32,11 @@ Dashboard shows Life Map radar chart (read-only) but cannot edit domain scores i
 - E2E test for edit flow
 
 ## Implementation Steps
-1. Create `LifeMapEditor.tsx` component
+1. Create `LifeMapEditor.tsx` component with sliders and text fields
 2. Add PUT handler to existing life-map API route
-3. Create life-map serializer
-4. Add edit page or modal
-5. Add edit button to dashboard
+3. Add `serializeLifeMap()` function to `lib/parsers/life-map.ts`
+4. Add edit page at `/life-map/edit` route
+5. Add edit button to Life Map card on dashboard
 
 ## Tracking & Progress
 - **Linear Issue**: TBD
