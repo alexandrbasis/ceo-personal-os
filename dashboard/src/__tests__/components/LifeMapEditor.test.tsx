@@ -29,11 +29,11 @@ jest.mock('next/navigation', () => ({
 describe('AC1: LifeMapEditor Component', () => {
   const mockLifeMapData: LifeMap = {
     domains: {
-      career: { score: 8, assessment: 'Strong momentum, good team' },
+      career: { score: 10, assessment: 'Strong momentum, good team' },
       relationships: { score: 6, assessment: 'Needs more quality time' },
       health: { score: 5, assessment: 'Acceptable but neglected' },
       meaning: { score: 7, assessment: 'Growing sense of purpose' },
-      finances: { score: 8, assessment: 'Stable and secure' },
+      finances: { score: 9, assessment: 'Stable and secure' },
       fun: { score: 4, assessment: 'Neglected, needs attention' },
     },
   };
@@ -83,7 +83,7 @@ describe('AC1: LifeMapEditor Component', () => {
 
       const careerSlider = screen.getByRole('slider', { name: /career/i });
       expect(careerSlider).toBeInTheDocument();
-      expect(careerSlider).toHaveAttribute('aria-valuenow', '8');
+      expect(careerSlider).toHaveAttribute('aria-valuenow', '10');
     });
 
     it('should render slider for Relationships domain', async () => {
@@ -147,7 +147,7 @@ describe('AC1: LifeMapEditor Component', () => {
 
       const financesSlider = screen.getByRole('slider', { name: /finances/i });
       expect(financesSlider).toBeInTheDocument();
-      expect(financesSlider).toHaveAttribute('aria-valuenow', '8');
+      expect(financesSlider).toHaveAttribute('aria-valuenow', '9');
     });
 
     it('should render slider for Fun domain', async () => {
@@ -196,11 +196,12 @@ describe('AC1: LifeMapEditor Component', () => {
         />
       );
 
-      // Should display score values
-      expect(screen.getByText('8', { exact: true })).toBeInTheDocument(); // Career
+      // Should display score values (unique values to avoid getByText conflicts)
+      expect(screen.getByText('10', { exact: true })).toBeInTheDocument(); // Career
       expect(screen.getByText('6', { exact: true })).toBeInTheDocument(); // Relationships
       expect(screen.getByText('5', { exact: true })).toBeInTheDocument(); // Health
       expect(screen.getByText('7', { exact: true })).toBeInTheDocument(); // Meaning
+      expect(screen.getByText('9', { exact: true })).toBeInTheDocument(); // Finances
       expect(screen.getByText('4', { exact: true })).toBeInTheDocument(); // Fun
     });
   });
@@ -483,7 +484,7 @@ describe('AC1: LifeMapEditor Component', () => {
         expect(mockOnSave).toHaveBeenCalledWith(
           expect.objectContaining({
             domains: expect.objectContaining({
-              career: expect.objectContaining({ score: 8 }),
+              career: expect.objectContaining({ score: 10 }),
               fun: expect.objectContaining({ score: 4 }),
             }),
           })
@@ -658,8 +659,8 @@ describe('AC1: LifeMapEditor Component', () => {
       const careerSlider = screen.getByRole('slider', { name: /career/i });
       careerSlider.focus();
 
-      // Arrow keys should change value
-      await user.keyboard('{ArrowRight}');
+      // Arrow keys should change value (career starts at 10, so arrow left decreases to 9)
+      await user.keyboard('{ArrowLeft}');
 
       await waitFor(() => {
         expect(careerSlider).toHaveAttribute('aria-valuenow', '9');
