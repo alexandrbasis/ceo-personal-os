@@ -10,7 +10,6 @@
  * - Handles loading/error states
  */
 
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -72,8 +71,8 @@ Your best thinking happens before the world starts demanding responses.
     mockToast.error.mockClear();
 
     // Default successful GET fetch mock
-    (global.fetch as jest.Mock).mockImplementation((url: string) => {
-      if (url.includes('/api/principles')) {
+    (global.fetch as jest.Mock).mockImplementation((urlParam: string) => {
+      if (urlParam.includes('/api/principles')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ content: samplePrinciplesContent }),
@@ -91,8 +90,7 @@ Your best thinking happens before the world starts demanding responses.
 
       await waitFor(() => {
         expect(
-          screen.getByText(/principles/i) ||
-            screen.getByRole('heading', { name: /principles/i })
+          screen.getByRole('heading', { level: 1 })
         ).toBeInTheDocument();
       });
     });
@@ -310,7 +308,7 @@ Your best thinking happens before the world starts demanding responses.
 
       // Mock both GET and PUT
       (global.fetch as jest.Mock).mockImplementation(
-        (url: string, options?: RequestInit) => {
+        (_url: string, options?: RequestInit) => {
           if (options?.method === 'PUT') {
             return Promise.resolve({
               ok: true,
@@ -360,7 +358,7 @@ Your best thinking happens before the world starts demanding responses.
       const user = userEvent.setup();
 
       (global.fetch as jest.Mock).mockImplementation(
-        (url: string, options?: RequestInit) => {
+        (_url: string, options?: RequestInit) => {
           if (options?.method === 'PUT') {
             return Promise.resolve({
               ok: true,
@@ -404,7 +402,7 @@ Your best thinking happens before the world starts demanding responses.
       const user = userEvent.setup();
 
       (global.fetch as jest.Mock).mockImplementation(
-        (url: string, options?: RequestInit) => {
+        (_url: string, options?: RequestInit) => {
           if (options?.method === 'PUT') {
             return Promise.resolve({
               ok: true,
@@ -449,7 +447,7 @@ Your best thinking happens before the world starts demanding responses.
       const user = userEvent.setup();
 
       (global.fetch as jest.Mock).mockImplementation(
-        (url: string, options?: RequestInit) => {
+        (_url: string, options?: RequestInit) => {
           if (options?.method === 'PUT') {
             return Promise.resolve({
               ok: false,
@@ -493,7 +491,7 @@ Your best thinking happens before the world starts demanding responses.
       const user = userEvent.setup();
 
       (global.fetch as jest.Mock).mockImplementation(
-        (url: string, options?: RequestInit) => {
+        (_url: string, options?: RequestInit) => {
           if (options?.method === 'PUT') {
             return Promise.resolve({
               ok: false,
