@@ -40,3 +40,6 @@ export const NORTH_STAR_PATH = path.join(MARKDOWN_BASE_PATH, 'north_star.md');
 
 // Principles file
 export const PRINCIPLES_PATH = path.join(MARKDOWN_BASE_PATH, 'principles.md');
+
+// Memory file
+export const MEMORY_PATH = path.join(MARKDOWN_BASE_PATH, 'memory.md');
