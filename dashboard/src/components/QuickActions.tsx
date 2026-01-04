@@ -198,8 +198,18 @@ export function QuickActions({ lastReviewDate, lastDailyReviewDate, lastWeeklyRe
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">Your core direction</span>
         </div>
-        <Button variant="secondary" asChild>
+        <Button variant="secondary" className="button" asChild>
           <Link href="/north-star">North Star</Link>
+        </Button>
+      </div>
+
+      {/* Principles Section */}
+      <div data-testid="principles-section" className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Your core guidelines</span>
+        </div>
+        <Button variant="secondary" className="button" asChild>
+          <Link href="/principles">Operating Principles</Link>
         </Button>
       </div>
 
