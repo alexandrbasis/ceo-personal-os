@@ -224,6 +224,16 @@ export function QuickActions({ lastReviewDate, lastDailyReviewDate, lastWeeklyRe
         </Button>
       </div>
 
+      {/* Frameworks Section */}
+      <div data-testid="frameworks-section" className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Thinking tools for reflection</span>
+        </div>
+        <Button variant="secondary" className="button" asChild>
+          <Link href="/frameworks">Frameworks</Link>
+        </Button>
+      </div>
+
       {/* View All Link */}
       <div className="pt-2 border-t">
         <Button variant="outline" asChild>
