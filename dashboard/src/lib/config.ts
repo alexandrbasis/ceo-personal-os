@@ -43,3 +43,6 @@ export const PRINCIPLES_PATH = path.join(MARKDOWN_BASE_PATH, 'principles.md');
 
 // Memory file
 export const MEMORY_PATH = path.join(MARKDOWN_BASE_PATH, 'memory.md');
+
+// Frameworks directory
+export const FRAMEWORKS_PATH = path.join(MARKDOWN_BASE_PATH, 'frameworks');
