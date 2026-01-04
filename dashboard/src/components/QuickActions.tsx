@@ -213,6 +213,17 @@ export function QuickActions({ lastReviewDate, lastDailyReviewDate, lastWeeklyRe
         </Button>
       </div>
 
+      {/* Memory Section */}
+      <div data-testid="memory-section" className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Accumulated self-knowledge</span>
+        </div>
+        <span className="text-xs text-muted-foreground">Review before quarterly review</span>
+        <Button variant="secondary" className="button" asChild>
+          <Link href="/memory">Memory</Link>
+        </Button>
+      </div>
+
       {/* View All Link */}
       <div className="pt-2 border-t">
         <Button variant="outline" asChild>
