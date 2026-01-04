@@ -18,13 +18,13 @@ Testing the Frameworks Viewer/Editor feature which provides:
 
 ## Acceptance Criteria -> Test Mapping
 
-| # | Criterion | Test Type | Test File | Tests | Status |
-|---|-----------|-----------|-----------|-------|--------|
-| AC1 | Frameworks Page (`/frameworks` listing) | Page | `pages/frameworks.test.tsx` | 28 | Written |
-| AC2 | Framework View (`/frameworks/[name]`) | Page | `pages/framework-detail.test.tsx` | 37 | Written |
-| AC3 | Framework Editor (markdown editor) | Component | `components/FrameworkEditor.test.tsx` | 38 | Written |
-| AC4 | API (GET/PUT `/api/frameworks/[name]`) | API | `api/frameworks.test.ts` | 33 | Written |
-| AC5 | Navigation (QuickActions link) | Component | `components/QuickActions.frameworks.test.tsx` | 16 | Written |
+| # | Criterion | Test Type | Test File | Tests | Status | Commit |
+|---|-----------|-----------|-----------|-------|--------|--------|
+| AC1 | Frameworks Page (`/frameworks` listing) | Page | `pages/frameworks.test.tsx` | 28 | Written | 1e9a11a |
+| AC2 | Framework View (`/frameworks/[name]`) | Page | `pages/framework-detail.test.tsx` | 37 | Written | 5302db7 |
+| AC3 | Framework Editor (markdown editor) | Component | `components/FrameworkEditor.test.tsx` | 38 | Written | e742d95 |
+| AC4 | API (GET/PUT `/api/frameworks/[name]`) | API | `api/frameworks.test.ts` | 33 | Written | 33f1af7 |
+| AC5 | Navigation (QuickActions link) | Component | `components/QuickActions.frameworks.test.tsx` | 16 | Written | 6f73f5e |
 
 ## Test Files Created
 
