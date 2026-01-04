@@ -102,10 +102,7 @@ Your best thinking happens before the world starts demanding responses.
       );
 
       // Should have an editor element
-      const editor =
-        screen.getByRole('textbox') ||
-        screen.getByTestId('principles-editor') ||
-        screen.getByRole('textbox', { name: /editor|content|principles/i });
+      const editor = screen.getByRole('textbox');
       expect(editor).toBeInTheDocument();
     });
 
@@ -156,8 +153,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const toolbar =
-        screen.getByRole('toolbar') || screen.getByTestId('editor-toolbar');
+      const toolbar = screen.getByRole('toolbar');
       expect(toolbar).toBeInTheDocument();
     });
 
@@ -172,10 +168,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const boldButton =
-        screen.getByRole('button', { name: /bold/i }) ||
-        screen.getByTitle(/bold/i) ||
-        screen.getByLabelText(/bold/i);
+      const boldButton = screen.getByRole('button', { name: /bold/i });
       expect(boldButton).toBeInTheDocument();
     });
 
@@ -190,10 +183,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const italicButton =
-        screen.getByRole('button', { name: /italic/i }) ||
-        screen.getByTitle(/italic/i) ||
-        screen.getByLabelText(/italic/i);
+      const italicButton = screen.getByRole('button', { name: /italic/i });
       expect(italicButton).toBeInTheDocument();
     });
 
@@ -208,10 +198,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const headersButton =
-        screen.getByRole('button', { name: /header|heading|h1|h2/i }) ||
-        screen.getByTitle(/header|heading/i) ||
-        screen.getByLabelText(/header|heading/i);
+      const headersButton = screen.getByRole('button', { name: /header|heading|h1|h2/i });
       expect(headersButton).toBeInTheDocument();
     });
 
@@ -226,10 +213,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const listButton =
-        screen.getByRole('button', { name: /list|bullet|numbered/i }) ||
-        screen.getByTitle(/list/i) ||
-        screen.getByLabelText(/list/i);
+      const listButton = screen.getByRole('button', { name: /list|bullet|numbered/i });
       expect(listButton).toBeInTheDocument();
     });
 
@@ -244,10 +228,7 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const linkButton =
-        screen.getByRole('button', { name: /link/i }) ||
-        screen.getByTitle(/link/i) ||
-        screen.getByLabelText(/link/i);
+      const linkButton = screen.getByRole('button', { name: /link/i });
       expect(linkButton).toBeInTheDocument();
     });
 
@@ -264,12 +245,11 @@ Your best thinking happens before the world starts demanding responses.
       );
 
       const editor = screen.getByRole('textbox');
-      // Select text
-      await user.tripleClick(editor);
+      // Select all text using keyboard shortcut
+      await user.click(editor);
+      await user.keyboard('{Control>}a{/Control}');
 
-      const boldButton =
-        screen.getByRole('button', { name: /bold/i }) ||
-        screen.getByTitle(/bold/i);
+      const boldButton = screen.getByRole('button', { name: /bold/i });
       await user.click(boldButton);
 
       // Should wrap selected text with ** for markdown bold
@@ -293,17 +273,11 @@ Your best thinking happens before the world starts demanding responses.
       );
 
       // Should have edit tab/button
-      const editToggle =
-        screen.getByRole('tab', { name: /edit/i }) ||
-        screen.getByRole('button', { name: /edit/i }) ||
-        screen.getByText(/edit/i);
+      const editToggle = screen.getByRole('tab', { name: /edit/i });
       expect(editToggle).toBeInTheDocument();
 
       // Should have preview tab/button
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i }) ||
-        screen.getByText(/preview/i);
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       expect(previewToggle).toBeInTheDocument();
     });
 
@@ -335,17 +309,12 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i });
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       await user.click(previewToggle);
 
       await waitFor(() => {
         // In preview mode, should show rendered markdown, not editor
-        const preview =
-          screen.getByTestId('markdown-preview') ||
-          screen.getByRole('article') ||
-          document.querySelector('.markdown-preview');
+        const preview = screen.getByTestId('markdown-preview');
         expect(preview).toBeInTheDocument();
       });
     });
@@ -362,17 +331,12 @@ Your best thinking happens before the world starts demanding responses.
         />
       );
 
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i });
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       await user.click(previewToggle);
 
       await waitFor(() => {
         // Should render heading
-        expect(
-          screen.getByRole('heading', { name: /heading/i }) ||
-            screen.getByText('Heading')
-        ).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /heading/i })).toBeInTheDocument();
       });
     });
 
@@ -389,15 +353,11 @@ Your best thinking happens before the world starts demanding responses.
       );
 
       // Switch to preview
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i });
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       await user.click(previewToggle);
 
       // Switch back to edit
-      const editToggle =
-        screen.getByRole('tab', { name: /edit/i }) ||
-        screen.getByRole('button', { name: /edit/i });
+      const editToggle = screen.getByRole('tab', { name: /edit/i });
       await user.click(editToggle);
 
       await waitFor(() => {
@@ -618,9 +578,7 @@ Your best thinking happens before the world starts demanding responses.
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
-      expect(
-        screen.getByText(/saving/i) || screen.getByRole('progressbar')
-      ).toBeInTheDocument();
+      expect(screen.getByText(/saving/i)).toBeInTheDocument();
     });
 
     it('should handle save error gracefully', async () => {
@@ -882,9 +840,7 @@ function decide() {
       );
 
       // Switch to preview
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i });
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       await user.click(previewToggle);
 
       await waitFor(() => {
@@ -913,16 +869,12 @@ function decide() {
       );
 
       // Switch to preview
-      const previewToggle =
-        screen.getByRole('tab', { name: /preview/i }) ||
-        screen.getByRole('button', { name: /preview/i });
+      const previewToggle = screen.getByRole('tab', { name: /preview/i });
       await user.click(previewToggle);
 
       await waitFor(() => {
         // Table should be visible
-        expect(
-          screen.getByRole('table') || screen.getByText('Principle')
-        ).toBeInTheDocument();
+        expect(screen.getByRole('table')).toBeInTheDocument();
       });
     });
   });

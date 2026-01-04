@@ -100,9 +100,7 @@ Your best thinking happens before the world starts demanding responses.
 
       render(<PrinciplesPage />);
 
-      expect(
-        screen.getByText(/loading/i) || screen.getByRole('progressbar')
-      ).toBeInTheDocument();
+      expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });
 
     it('should load content from GET /api/principles', async () => {
@@ -121,10 +119,7 @@ Your best thinking happens before the world starts demanding responses.
       render(<PrinciplesPage />);
 
       await waitFor(() => {
-        expect(
-          screen.getByRole('heading', { level: 1 }) ||
-            screen.getByText(/principles/i)
-        ).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
       });
     });
   });
