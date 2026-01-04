@@ -58,13 +58,21 @@ export default function MemoryPage() {
   };
 
   const handleSave = async (newContent: string) => {
-    const response = await fetch('/api/memory', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: newContent }),
-    });
+    let response: Response;
+    try {
+      response = await fetch('/api/memory', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: newContent }),
+      });
+    } catch (err) {
+      // Network error (fetch rejected)
+      const message = err instanceof Error ? err.message : 'Network error';
+      toast.error(message);
+      throw err;
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

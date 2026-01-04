@@ -877,5 +877,55 @@ function decide() {
         expect(screen.getByRole('table')).toBeInTheDocument();
       });
     });
+
+    it('should not recreate draft after save even with pending debounce timer', async () => {
+      jest.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      mockOnSave.mockResolvedValue(undefined);
+      const { MemoryEditor } = await import('@/components/MemoryEditor');
+
+      render(
+        <MemoryEditor
+          initialContent="initial"
+          onSave={mockOnSave}
+          onCancel={mockOnCancel}
+        />
+      );
+
+      const editor = screen.getByRole('textbox');
+
+      // Type something to trigger debounced auto-save
+      await user.type(editor, ' updated');
+
+      // Clear mock to track only post-save calls
+      localStorageMock.removeItem.mockClear();
+      localStorageMock.setItem.mockClear();
+
+      // Save immediately (before debounce fires)
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      // Wait for save to complete
+      await waitFor(() => {
+        expect(mockOnSave).toHaveBeenCalled();
+      });
+
+      // Verify draft was removed
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(
+        expect.stringMatching(/memory.*draft|draft.*memory/i)
+      );
+
+      // Advance timers past the debounce period
+      jest.advanceTimersByTime(1000);
+
+      // Draft should NOT have been recreated by the debounce timer
+      // setItem should not have been called after removeItem
+      const setItemCalls = localStorageMock.setItem.mock.calls.filter(
+        (call: string[]) => call[0].toLowerCase().includes('memory')
+      );
+      expect(setItemCalls.length).toBe(0);
+
+      jest.useRealTimers();
+    });
   });
 });

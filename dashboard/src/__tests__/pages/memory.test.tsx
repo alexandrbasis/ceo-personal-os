@@ -676,6 +676,46 @@ This is your accumulated self-knowledge - patterns, preferences, and insights ab
         ).toBeInTheDocument();
       });
     });
+
+    it('should show toast error when network fails during save', async () => {
+      const user = userEvent.setup();
+
+      // First GET succeeds, then PUT fails with network error
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ content: sampleMemoryContent }),
+        })
+        .mockRejectedValueOnce(new Error('Network error'));
+
+      const MemoryPage = (await import('@/app/memory/page')).default;
+
+      render(<MemoryPage />);
+
+      // Wait for content to load
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+      });
+
+      // Enter edit mode
+      const editButton = screen.getByRole('button', { name: /edit/i });
+      await user.click(editButton);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
+      });
+
+      // Click save (will trigger network error)
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      // Verify toast.error was called with network error message
+      await waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith(
+          expect.stringMatching(/network|error/i)
+        );
+      });
+    });
   });
 
   describe('Page Layout', () => {

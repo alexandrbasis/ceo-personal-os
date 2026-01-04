@@ -129,6 +129,12 @@ export function MemoryEditor({
 
     try {
       await onSave(content);
+      // Clear any pending debounce timer before removing draft
+      // This prevents the timer from recreating the draft after save
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
       // Clear draft on successful save
       localStorage.removeItem(DRAFT_KEY);
     } catch (err) {
