@@ -37,3 +37,6 @@ export const GOALS_DRAFTS_PATH = path.join(GOALS_PATH, '.drafts');
 
 // North Star file
 export const NORTH_STAR_PATH = path.join(MARKDOWN_BASE_PATH, 'north_star.md');
+
+// Principles file
+export const PRINCIPLES_PATH = path.join(MARKDOWN_BASE_PATH, 'principles.md');
