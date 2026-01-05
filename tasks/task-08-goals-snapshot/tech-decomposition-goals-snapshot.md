@@ -9,20 +9,26 @@ SPEC specifies a "Goals Snapshot" section on dashboard that was never implemente
 - Status: On Track / Needs Attention / Behind
 - Based on quarterly progress if available
 
+## Design Decisions (Clarified)
+- **Goal Selection**: First 3-5 goals in file order
+- **Status Calculation**: Default status from goal frontmatter only (status field)
+- **Text Display**: Title + brief description excerpt (truncated if needed)
+- **API Endpoint**: `GET /api/goals/snapshot` (new dedicated endpoint)
+
 ## Acceptance Criteria
 
 ### AC1: Goals Snapshot Component
-- [ ] Card on dashboard showing 3-5 goals from 1-year goals
-- [ ] Each goal shows text (truncated if needed)
-- [ ] Status indicator per goal (On Track / Needs Attention / Behind)
+- [ ] Card on dashboard showing first 3-5 goals from 1-year goals
+- [ ] Each goal shows title + description excerpt (truncated if >100 chars)
+- [ ] Status indicator per goal (On Track / Needs Attention / Behind) from frontmatter
 
-### AC2: Status Calculation
-- [ ] Default status based on time of year vs goal
-- [ ] Optional: Manual status override
-- [ ] Optional: Derive from quarterly review mentions
+### AC2: Status from Frontmatter
+- [ ] Read `status` field from goal frontmatter
+- [ ] Default to "On Track" if no status field present
+- [ ] Support values: "On Track", "Needs Attention", "Behind"
 
 ### AC3: API
-- [ ] `GET /api/goals/1-year/summary` - returns top goals with status
+- [ ] `GET /api/goals/snapshot` - returns first 3-5 goals with title, description, status
 
 ### AC4: Navigation
 - [ ] Click goal → navigate to goals page

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { LifeMapChart, type LifeMapChartData, type EnergyTrendDataItem } from '@/components/LifeMapChart';
 import { QuickActions } from '@/components/QuickActions';
 import { ReviewsList } from '@/components/ReviewsList';
+import { GoalsSnapshot } from '@/components/GoalsSnapshot';
 import { WelcomeTour, HelpButton } from '@/components/WelcomeTour';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { TitleWithTooltip } from '@/components/ui/info-tooltip';
@@ -186,6 +187,11 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Goals Snapshot */}
+        <div className="mt-6">
+          <GoalsSnapshot />
         </div>
 
         {/* Recent Reviews */}

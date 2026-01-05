@@ -6,7 +6,6 @@
  * AC4: Navigation - Click goal to navigate, "View All" link
  */
 
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -199,10 +198,10 @@ describe('GoalsSnapshot Component', () => {
       render(<GoalsSnapshot />);
 
       await waitFor(() => {
-        // Should show status badges/indicators
-        expect(screen.getByText(/On Track/i)).toBeInTheDocument();
-        expect(screen.getByText(/Needs Attention/i)).toBeInTheDocument();
-        expect(screen.getByText(/Behind/i)).toBeInTheDocument();
+        // Should show status badges/indicators (multiple goals may have same status)
+        expect(screen.getAllByText(/On Track/i).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/Needs Attention/i).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/Behind/i).length).toBeGreaterThan(0);
       });
     });
 
